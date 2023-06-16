@@ -5,7 +5,8 @@ app.use(express.static('public'));
 const port = 3000;
 const { Pool } = require('pg');
 
-dotenv.config();
+require('dotenv').config();
+// dotenv.config();
 
 
 const pool = new Pool ({
