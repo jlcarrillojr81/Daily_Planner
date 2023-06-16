@@ -1,0 +1,55 @@
+#mainContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: lightgray;
+}
+
+#title {
+  background-color: #FF6384;
+  text-align: center;
+  font-size: 32px;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+#menu {
+  background-color: #36A2EB;
+  width: 100vw;
+  margin-top: 0;
+  height: 5vh;
+}
+
+#options {
+  background-color: #FFCE56;
+  flex-basis: 50%;
+  display: flex; /* Add this line */
+  justify-content: space-evenly; /* Add this line */
+  align-items: center; /* Add this line */
+}
+
+
+#content {
+  background-color: #4BC0C0;
+  flex-basis: 50%;
+}
+
+#motivational {
+  background-color: #9966FF;
+  text-align: center;
+  font-size: 32px;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+}
+

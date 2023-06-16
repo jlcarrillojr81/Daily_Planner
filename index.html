@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Planner</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="mainContainer">
+        <div id="title">
+            <h1>Daily Planner</h1>
+        </div>
+        <div id="menu">Menu</div>
+        <div id="options">
+          <button id="addButton">Add</button>
+          <div id="formContainer" style="display: none;">
+            <form id="activityForm">
+              <label for="dateInput">Date:</label>
+              <input type="text" id="dateInput" placeholder="YYYY-MM-DD">
+
+              <label for="timeInput">Time:</label>
+              <input type="text" id="timeInput" placeholder="HH:MM:SS">
+            
+              <label for="activityInput">Activity:</label>
+              <input type="text" id="activityInput" placeholder="Enter Activity">
+            
+              <label for="locationInput">Location:</label>
+              <input type="text" id="locationInput" placeholder="Enter Location">
+            
+              <label for="notesInput">Notes:</label>
+              <input type="text" id="notesInput" placeholder="Enter Notes">
+            
+              <div id="exampleFormat">
+                <p>Example Format:</p>
+                <p>Date: MM/DD/YYYY</p>
+                <p>Time: HH:MM</p>
+                <p>Activity: Example activity</p>
+                <p>Location: Example location</p>
+                <p>Notes: Example notes</p>
+              </div>
+            
+              <button type="submit" id="submitButton">Submit</button>
+            </form>
+          </div>
+          <button id="deleteButton">Delete</button>
+        </div>
+        
+        <div id="content">Content</div>
+        <div id="motivational">Motivational</div>
+    </div>
+  
+  <script src="main.js"></script>
+</body>
+</html>

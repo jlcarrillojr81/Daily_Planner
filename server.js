@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
+app.use(express.static('public'));
 const port = 3000;
 const { Pool } = require('pg');
+
+dotenv.config();
 
 
 const pool = new Pool ({
@@ -42,9 +45,9 @@ app.get('/events/:id', async (req, res) => {
 
 // post 
   app.post('/events', async (req, res) => {
-    const { date_column, time_column, activity, location, notes } = req.body;
+    const { date, time, activity, location, notes } = req.body;
     try {
-      const result = await pool.query('INSERT INTO events (date_column, time_column, activity, location, notes) VALUES ($1, $2, $3, $4, $5)RETURNING *', [date_column, time_column, activity, location, notes]);
+      const result = await pool.query('INSERT INTO events (date, time, activity, location, notes) VALUES ($1, $2, $3, $4, $5)RETURNING *', [date, time, activity, location, notes]);
       res.status(201).json(result.rows[0]);
     } catch (err) {
       console.error(err);
@@ -55,10 +58,10 @@ app.get('/events/:id', async (req, res) => {
 // update
 app.put('/events/:id', async (req, res) => {
     const { id } = req.params;
-    const { date_column, time_column, activity, location, notes } = req.body;
+    const { date, time, activity, location, notes } = req.body;
   
     try {
-      const result = await pool.query('UPDATE events SET date_column = $1, time_column = $2, activity = $3, location = $4, notes = $5 WHERE id = $6 RETURNING *', [date_column, time_column, activity, location, notes, id]
+      const result = await pool.query('UPDATE events SET date_column = $1, time_column = $2, activity = $3, location = $4, notes = $5 WHERE id = $6 RETURNING *', [date, time, activity, location, notes, id]
       );
   
       if (result.rowCount === 0) {
