@@ -18,6 +18,8 @@ document.getElementById("events").addEventListener("submit", function(event) {
   // Create an object with the form data
   const formData = { time, date, activity, location, notes };
 
+  console.log("FormData:", formData);
+
   // Send an HTTP POST request to your server
   fetch("/events", {
     method: "POST",
