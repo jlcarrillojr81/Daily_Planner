@@ -18,7 +18,7 @@ document.getElementById("events").addEventListener("submit", function(event) {
   // Create an object with the form data
   const formData = { time, date, activity, location, notes };
 
-  console.log("FormData:", formData);
+  console.log("FormData:", formData); // Log the form data
 
   // Send an HTTP POST request to your server
   fetch("/events", {
@@ -26,7 +26,7 @@ document.getElementById("events").addEventListener("submit", function(event) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(formData)
+    body: JSON.stringify(formData) // Serialize the form data as JSON
   })
     .then(response => response.json())
     .then(data => {
