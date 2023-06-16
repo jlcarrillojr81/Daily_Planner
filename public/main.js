@@ -16,7 +16,7 @@ document.getElementById("events").addEventListener("submit", function(event) {
   const notes = document.getElementById("notes").value;
 
   // Create an object with the form data
-  const formData = { time, date, activity, location, notes };
+  const formData = { "time": "", "date": "", "activity": "", "location": "", "notes": "" };
 
   console.log("FormData:", formData); // Log the form data
 
