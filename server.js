@@ -54,7 +54,7 @@ app.get('/events/:id', async (req, res) => {
       res.status(201).json(result.rows[0]);
     } catch (err) {
       console.error(err);
-      res.status(500).send('Error inserting Events into daily_planner database');
+      res.status(500).json({error: 'Error inserting Events into daily_planner database'});
     }
   });
 
