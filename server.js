@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
+const cors = require('cors');
+app.use(cors());
 const port = 3000;
 const { Pool } = require('pg');
 

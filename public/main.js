@@ -5,15 +5,15 @@ addButton.addEventListener('click', () => {
   formContainer.style.display = 'block';
 });
 
-document.getElementById("activityForm").addEventListener("submit", function(event) {
+document.getElementById("events").addEventListener("submit", function(event) {
   event.preventDefault(); // Prevent the default form submission behavior
 
   // Get the form input values
-  const time = document.getElementById("timeInput").value;
-  const date = document.getElementById("dateInput").value;
-  const activity = document.getElementById("activityInput").value;
-  const location = document.getElementById("locationInput").value;
-  const notes = document.getElementById("notesInput").value;
+  const time = document.getElementById("time").value;
+  const date = document.getElementById("date").value;
+  const activity = document.getElementById("activity").value;
+  const location = document.getElementById("location").value;
+  const notes = document.getElementById("notes").value;
 
   // Create an object with the form data
   const formData = { time, date, activity, location, notes };
@@ -30,46 +30,47 @@ document.getElementById("activityForm").addEventListener("submit", function(even
     .then(data => {
       console.log("Event created:", data);
       // Reset the form after successful submission
-      document.getElementById("activityForm").reset();
+      document.getElementById("events").reset();
+      // Refresh the displayed events
+      displayEvents();
     })
     .catch(error => {
       console.error("Error creating event:", error);
     });
 });
 
-const refreshButton = document.getElementById('refreshButton');
-const contentContainer = document.getElementById('content');
+// const refreshButton = document.getElementById('refreshButton');
+// const contentContainer = document.getElementById('content');
 
-// Function to fetch and display events in the content container
-const displayEvents = () => {
-  // Send an HTTP GET request to fetch events from the server
-  fetch('/events')
-    .then(response => response.json())
-    .then(data => {
-      // Clear the existing content
-      contentContainer.innerHTML = '';
+// // Function to fetch and display events in the content container
+// const displayEvents = () => {
+//   // Send an HTTP GET request to fetch events from the server
+//   fetch('/events')
+//     .then(response => response.json())
+//     .then(data => {
+//       // Clear the existing content
+//       contentContainer.innerHTML = '';
 
-      // Display each event in the content container
-      data.forEach(event => {
-        const eventElement = document.createElement('div');
-        eventElement.innerHTML = `
-          <p>Date: ${event.date}</p>
-          <p>Time: ${event.time}</p>
-          <p>Activity: ${event.activity}</p>
-          <p>Location: ${event.location}</p>
-          <p>Notes: ${event.notes}</p>
-        `;
-        contentContainer.appendChild(eventElement);
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching events:', error);
-    });
-};
+//       // Display each event in the content container
+//       data.forEach(event => {
+//         const eventElement = document.createElement('div');
+//         eventElement.innerHTML = `
+//           <p>Date: ${event.date}</p>
+//           <p>Time: ${event.time}</p>
+//           <p>Activity: ${event.activity}</p>
+//           <p>Location: ${event.location}</p>
+//           <p>Notes: ${event.notes}</p>
+//         `;
+//         contentContainer.appendChild(eventElement);
+//       });
+//     })
+//     .catch(error => {
+//       console.error('Error fetching events:', error);
+//     });
+// };
 
 // Add event listener to the refresh button
-refreshButton.addEventListener('click', displayEvents);
+// refreshButton.addEventListener('click', displayEvents);
 
 // Call the displayEvents function initially to load the events
-displayEvents();
-
+// displayEvents();
