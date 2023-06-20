@@ -11,6 +11,10 @@ const displayEvents = () => {
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
 
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        eventElement.appendChild(checkbox);
+
         const eventContent = document.createElement('p');
         eventContent.textContent = `${event.time} ${event.activity} At ${event.location}: ${event.notes}`;
         eventElement.appendChild(eventContent);
