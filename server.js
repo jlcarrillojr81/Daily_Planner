@@ -1,22 +1,26 @@
-const express = require('express');
-const app = express();
-app.use(express.json());
-const cors = require('cors');
-app.use(cors());
-require('dotenv').config();
-// dotenv.config();
-app.use(express.static('public'));
-const port = 3000;
+const dotenv = require('dotenv');
 const { Pool } = require('pg');
+const express = require('express');
+const cors = require('cors');
 
+dotenv.config();
+const app = express();
 
+app.use(express.json());
+app.use(cors());
+app.use(express.static('public'));
+
+const port = process.env.PORT;
+// const pool = new Pool ({
+//     user: 'josephcarrillo',
+//     host: 'localhost',
+//     database: 'daily_planner',
+//     password: '',
+//     port: 5432
+// });
 
 const pool = new Pool ({
-    user: 'josephcarrillo',
-    host: 'localhost',
-    database: 'daily_planner',
-    password: '',
-    port: 5432
+  connectionString: process.env.DATABASE_URL
 });
 
 // get all
