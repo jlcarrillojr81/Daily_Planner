@@ -45,8 +45,10 @@ addButton.addEventListener('click', () => {
   deleteButton.style.display = 'none';
 });
 
-editButton.addEventListener('click', () => {
-  const checkedBoxes = document.querySelectorAll('.event input[type="checkbox"]:checked');
+editButton.addEventListener("click", () => {
+  const checkedBoxes = document.querySelectorAll(
+    '.event input[type="checkbox"]:checked'
+  );
 
   if (checkedBoxes.length === 0) {
     alert("Please select an event to edit.");
@@ -113,44 +115,45 @@ const populateEditForm = (eventId) => {
       formContainer.style.display = "block";
       addButton.style.display = "none";
       deleteButton.style.display = "none";
-
-      const submitButton = document.getElementById("submit");
-      submitButton.addEventListener("click", () => {
-        const time = document.getElementById("time").value;
-        const activity = document.getElementById("activity").value;
-        const location = document.getElementById("location").value;
-        const notes = document.getElementById("notes").value;
-
-        const updatedData = { time, activity, location, notes };
-
-        fetch(`${DEPLOY_URL}/events/${eventId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedData),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Event updated:", data);
-
-            document.getElementById("events").reset();
-
-            displayEvents();
-
-            formContainer.style.display = "none";
-            addButton.style.display = "inline-block";
-            deleteButton.style.display = "inline-block";
-          })
-          .catch((error) => {
-            console.error("Error updating event:", error);
-          });
-      });
     })
     .catch((error) => {
       console.error("Error fetching event:", error);
     });
 };
+
+const submitButton = document.getElementById("submit");   
+submitButton.addEventListener("click", () => {
+  const time = document.getElementById("time").value;
+  const activity = document.getElementById("activity").value;
+  const location = document.getElementById("location").value;
+  const notes = document.getElementById("notes").value;
+
+  const updatedData = { time, activity, location, notes };
+
+  fetch(`${DEPLOY_URL}/events/${selectedEventId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Event updated:", data);
+
+      document.getElementById("events").reset();
+
+      displayEvents();
+
+      formContainer.style.display = "none";
+      addButton.style.display = "inline-block";
+      deleteButton.style.display = "inline-block";
+    })
+    .catch((error) => {
+      console.error("Error updating event:", error);
+    });
+});
+
 
 // Call the displayEvents function initially to load the events
 displayEvents();
