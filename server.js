@@ -3,13 +3,13 @@ const app = express();
 app.use(express.json());
 const cors = require('cors');
 app.use(cors());
+require('dotenv').config();
+dotenv.config();
+app.use(express.static('public'));
 const port = 3000;
 const { Pool } = require('pg');
 
-require('dotenv').config();
-// dotenv.config();
 
-app.use(express.static('public'));
 
 const pool = new Pool ({
     user: 'josephcarrillo',

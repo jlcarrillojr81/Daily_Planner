@@ -29,9 +29,9 @@
 #options {
   background-color: #FFCE56;
   flex-basis: 50%;
-  display: flex; /* Add this line */
-  justify-content: space-evenly; /* Add this line */
-  align-items: center; /* Add this line */
+  display: flex; 
+  justify-content: space-evenly; 
+  align-items: center; 
 }
 
 
