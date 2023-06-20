@@ -103,7 +103,9 @@ document.getElementById("events").addEventListener("submit", function (event) {
 });
 
 const populateEditForm = (eventId) => {
+  console.log("Event Data:", eventData);
   const event = eventData.find(event => event.id === eventId);
+  console.log("Selected Event:", event);
 
   document.getElementById("time").value = event.time;
   document.getElementById("activity").value = event.activity;
@@ -114,6 +116,7 @@ const populateEditForm = (eventId) => {
   addButton.style.display = 'none';
   deleteButton.style.display = 'none';
 };
+
 
 // Call the displayEvents function initially to load the events
 displayEvents();
