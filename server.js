@@ -52,9 +52,9 @@ app.get('/events/:id', async (req, res) => {
 
 // post 
   app.post('/events', async (req, res) => {
-    const { date, time, activity, location, notes } = req.body;
+    const { time, activity, location, notes } = req.body;
     try {
-      const result = await pool.query('INSERT INTO events (date, time, activity, location, notes) VALUES ($1, $2, $3, $4, $5)RETURNING *', [date, time, activity, location, notes]);
+      const result = await pool.query('INSERT INTO events (time, activity, location, notes) VALUES ($1, $2, $3, $4, $5)RETURNING *', [time, activity, location, notes]);
       res.status(201).json(result.rows[0]);
     } catch (err) {
       console.error(err);
@@ -65,10 +65,10 @@ app.get('/events/:id', async (req, res) => {
 // update
 app.put('/events/:id', async (req, res) => {
     const { id } = req.params;
-    const { date, time, activity, location, notes } = req.body;
+    const { time, activity, location, notes } = req.body;
   
     try {
-      const result = await pool.query('UPDATE events SET date = $1, time = $2, activity = $3, location = $4, notes = $5 WHERE id = $6 RETURNING *', [date, time, activity, location, notes, id]
+      const result = await pool.query('UPDATE events SET time = $1, activity = $2, location = $3, notes = $4 WHERE id = $5 RETURNING *', [time, activity, location, notes, id]
       );
   
       if (result.rowCount === 0) {

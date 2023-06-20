@@ -12,7 +12,6 @@ const displayEvents = () => {
     data.forEach(event => {
       const eventElement = document.createElement('div');
       eventElement.innerHTML = `
-      <p>Date: ${event.date}</p>
       <p>Time: ${event.time}</p>
       <p>Activity: ${event.activity}</p>
       <p>Location: ${event.location}</p>
@@ -43,13 +42,12 @@ document.getElementById("events").addEventListener("submit", function(event) {
   event.preventDefault(); 
   
   const time = document.getElementById("time").value;
-  const date = document.getElementById("date").value;
   const activity = document.getElementById("activity").value;
   const location = document.getElementById("location").value;
   const notes = document.getElementById("notes").value;
   
   
-  const formData = { date, time, activity, location, notes };
+  const formData = { time, activity, location, notes };
   
   console.log("FormData:", formData); 
   
