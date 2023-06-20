@@ -29,7 +29,6 @@ const contentContainer = document.getElementById('content');
 const formContainer = document.getElementById('formContainer');
 
 const addButton = document.getElementById('addButton');
-const refreshButton = document.getElementById('refreshButton');
 const deleteButton = document.getElementById('deleteButton');
 const exitButton = document.getElementById('exitButton'); // Add this line
 
@@ -47,7 +46,6 @@ exitButton.addEventListener('click', () => { // Add this entire event listener
   deleteButton.style.display = 'inline-block';
 });
 
-refreshButton.addEventListener('click', displayEvents);
 
 document.getElementById("events").addEventListener("submit", function (event) {
   event.preventDefault();
@@ -73,6 +71,10 @@ document.getElementById("events").addEventListener("submit", function (event) {
       document.getElementById("events").reset();
 
       displayEvents();
+
+      formContainer.style.display = 'none'; 
+      addButton.style.display = 'inline-block';
+      deleteButton.style.display = 'inline-block';
     })
     .catch(error => {
       console.error("Error creating event:", error);
