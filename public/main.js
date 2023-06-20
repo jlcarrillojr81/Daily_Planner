@@ -29,6 +29,7 @@ const displayEvents = () => {
     });
 };
 
+
 const DEPLOY_URL = 'https://daily-planner-4ssy.onrender.com';
 
 const contentContainer = document.getElementById('content');
