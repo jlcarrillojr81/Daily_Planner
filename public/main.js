@@ -1,9 +1,8 @@
+let selectedEventsId;
+
 const displayEvents = () => {
   fetch(`${DEPLOY_URL}/events`)
-    .then(response => {
-      console.log("Response:", response);
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
       eventData = data;
 
@@ -46,7 +45,7 @@ addButton.addEventListener('click', () => {
   deleteButton.style.display = 'none';
 });
 
-editButton.addEventListener('click', () => { // Add this entire event listener
+editButton.addEventListener('click', () => {
   const checkedBoxes = document.querySelectorAll('.event input[type="checkbox"]:checked');
 
   if (checkedBoxes.length === 0) {
@@ -55,8 +54,8 @@ editButton.addEventListener('click', () => { // Add this entire event listener
     alert("Please only select one event!");
   } else {
     const selectedCheckbox = checkedBoxes[0];
-    const eventId = selectedCheckbox.dataset.eventId;
-    populateEditForm(eventId);
+    selectedEventId = selectedCheckbox.dataset.eventId; // Store the selected event ID
+    populateEditForm(selectedEventId);
   }
 });
 
@@ -103,22 +102,22 @@ document.getElementById("events").addEventListener("submit", function (event) {
 });
 
 const populateEditForm = (eventId) => {
-  console.log("Event Data:", eventData);
-  console.log("Selected Event ID:", eventId);
-  
-  const event = eventData.find(event => event.id === eventId);
-  console.log("Selected Event:", event);
+  fetch(`${DEPLOY_URL}/events/${eventId}`) // Fetch the event using the event ID
+    .then(response => response.json())
+    .then(event => {
+      document.getElementById("time").value = event.time;
+      document.getElementById("activity").value = event.activity;
+      document.getElementById("location").value = event.location;
+      document.getElementById("notes").value = event.notes;
 
-  document.getElementById("time").value = event.time;
-  document.getElementById("activity").value = event.activity;
-  document.getElementById("location").value = event.location;
-  document.getElementById("notes").value = event.notes;
-
-  formContainer.style.display = 'block';
-  addButton.style.display = 'none';
-  deleteButton.style.display = 'none';
+      formContainer.style.display = 'block';
+      addButton.style.display = 'none';
+      deleteButton.style.display = 'none';
+    })
+    .catch(error => {
+      console.error('Error fetching event:', error);
+    });
 };
-
 
 // Call the displayEvents function initially to load the events
 displayEvents();
