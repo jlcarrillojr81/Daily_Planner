@@ -64,23 +64,22 @@ app.post('/events', async (req, res) => {
 
 // update
 app.put('/events/:id', async (req, res) => {
-    const { id } = req.params;
-    const { time, activity, location, notes } = req.body;
-  
-    try {
-      const result = await pool.query('UPDATE events SET time = $1, activity = $2, location = $3, notes = $4 WHERE id = $5 RETURNING *', [time, activity, location, notes, id]
-      );
-  
-      if (result.rowCount === 0) {
-        res.status(404).send('Events not found!');
-      } else {
-        res.json(result.rows[0]);
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Error updating Events from daily_planner database');
+  const { id } = req.params;
+  const { time, activity, location, notes } = req.body;
+
+  try {
+    const result = await pool.query('UPDATE events SET time = $1, activity = $2, location = $3, notes = $4 WHERE id = $5 RETURNING *', [time, activity, location, notes, id]);
+
+    if (result.rowCount === 0) {
+      res.status(404).send('Event not found!');
+    } else {
+      res.json(result.rows[0]);
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating Event in daily_planner database');
+  }
+});
 
 // delete
 app.delete('/events/:id', async (req, res) => {
