@@ -5,9 +5,11 @@ const displayEvents = () => {
       return response.json();
     })
     .then(data => {
+      eventData = data;
+
       contentContainer.innerHTML = '';
 
-      data.forEach(event => {
+      eventData.forEach(event => {
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
 
@@ -101,7 +103,7 @@ document.getElementById("events").addEventListener("submit", function (event) {
 });
 
 const populateEditForm = (eventId) => {
-  const event = data.find(event => event.id === eventId);
+  const event = eventData.find(event => event.id === eventId);
 
   document.getElementById("time").value = event.time;
   document.getElementById("activity").value = event.activity;
