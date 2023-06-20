@@ -65,7 +65,7 @@ app.put('/events/:id', async (req, res) => {
     const { date, time, activity, location, notes } = req.body;
   
     try {
-      const result = await pool.query('UPDATE events SET date_column = $1, time_column = $2, activity = $3, location = $4, notes = $5 WHERE id = $6 RETURNING *', [date, time, activity, location, notes, id]
+      const result = await pool.query('UPDATE events SET date = $1, time = $2, activity = $3, location = $4, notes = $5 WHERE id = $6 RETURNING *', [date, time, activity, location, notes, id]
       );
   
       if (result.rowCount === 0) {
