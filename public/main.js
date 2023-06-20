@@ -1,4 +1,4 @@
-let selectedEventsId;
+let selectedEventId;
 
 const displayEvents = () => {
   fetch(`${DEPLOY_URL}/events`)
@@ -32,23 +32,23 @@ const displayEvents = () => {
 const DEPLOY_URL = 'https://daily-planner-4ssy.onrender.com';
 
 const contentContainer = document.getElementById('content');
-const formContainer = document.getElementById('formContainer');
+const addFormContainer = document.getElementById('addFormContainer');
+const editFormContainer = document.getElementById('editFormContainer');
 
 const addButton = document.getElementById('addButton');
-const editButton = document.getElementById('editButton'); // Add this line
+const editButton = document.getElementById('editButton');
 const deleteButton = document.getElementById('deleteButton');
 const exitButton = document.getElementById('exitButton');
 
 addButton.addEventListener('click', () => {
-  formContainer.style.display = 'block';
+  addFormContainer.style.display = 'block';
+  editFormContainer.style.display = 'none';
   addButton.style.display = 'none';
   deleteButton.style.display = 'none';
 });
 
-editButton.addEventListener("click", () => {
-  const checkedBoxes = document.querySelectorAll(
-    '.event input[type="checkbox"]:checked'
-  );
+editButton.addEventListener('click', () => {
+  const checkedBoxes = document.querySelectorAll('.event input[type="checkbox"]:checked');
 
   if (checkedBoxes.length === 0) {
     alert("Please select an event to edit.");
@@ -56,26 +56,28 @@ editButton.addEventListener("click", () => {
     alert("Please only select one event!");
   } else {
     const selectedCheckbox = checkedBoxes[0];
-    selectedEventId = selectedCheckbox.dataset.eventId; // Store the selected event ID
+    selectedEventId = selectedCheckbox.dataset.eventId;
     populateEditForm(selectedEventId);
   }
 });
 
 exitButton.addEventListener('click', () => {
-  document.getElementById("events").reset();
+  document.getElementById("addForm").reset();
+  document.getElementById("editForm").reset();
 
-  formContainer.style.display = 'none';
+  addFormContainer.style.display = 'none';
+  editFormContainer.style.display = 'none';
   addButton.style.display = 'inline-block';
   deleteButton.style.display = 'inline-block';
 });
 
-document.getElementById("events").addEventListener("submit", function (event) {
+document.getElementById("addForm").addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const time = document.getElementById("time").value;
-  const activity = document.getElementById("activity").value;
-  const location = document.getElementById("location").value;
-  const notes = document.getElementById("notes").value;
+  const time = document.getElementById("addTime").value;
+  const activity = document.getElementById("addActivity").value;
+  const location = document.getElementById("addLocation").value;
+  const notes = document.getElementById("addNotes").value;
 
   const formData = { time, activity, location, notes };
 
@@ -90,11 +92,11 @@ document.getElementById("events").addEventListener("submit", function (event) {
     .then(data => {
       console.log("Event created:", data);
 
-      document.getElementById("events").reset();
+      document.getElementById("addForm").reset();
 
       displayEvents();
 
-      formContainer.style.display = 'none';
+      addFormContainer.style.display = 'none';
       addButton.style.display = 'inline-block';
       deleteButton.style.display = 'inline-block';
     })
@@ -103,30 +105,13 @@ document.getElementById("events").addEventListener("submit", function (event) {
     });
 });
 
-const populateEditForm = (eventId) => {
-  fetch(`${DEPLOY_URL}/events/${eventId}`)
-    .then((response) => response.json())
-    .then((event) => {
-      document.getElementById("time").value = event.time;
-      document.getElementById("activity").value = event.activity;
-      document.getElementById("location").value = event.location;
-      document.getElementById("notes").value = event.notes;
+document.getElementById("editForm").addEventListener("submit", function (event) {
+  event.preventDefault();
 
-      formContainer.style.display = "block";
-      addButton.style.display = "none";
-      deleteButton.style.display = "none";
-    })
-    .catch((error) => {
-      console.error("Error fetching event:", error);
-    });
-};
-
-const submitButton = document.getElementById("submit");   
-submitButton.addEventListener("click", () => {
-  const time = document.getElementById("time").value;
-  const activity = document.getElementById("activity").value;
-  const location = document.getElementById("location").value;
-  const notes = document.getElementById("notes").value;
+  const time = document.getElementById("editTime").value;
+  const activity = document.getElementById("editActivity").value;
+  const location = document.getElementById("editLocation").value;
+  const notes = document.getElementById("editNotes").value;
 
   const updatedData = { time, activity, location, notes };
 
@@ -141,11 +126,11 @@ submitButton.addEventListener("click", () => {
     .then((data) => {
       console.log("Event updated:", data);
 
-      document.getElementById("events").reset();
+      document.getElementById("editForm").reset();
 
       displayEvents();
 
-      formContainer.style.display = "none";
+      editFormContainer.style.display = "none";
       addButton.style.display = "inline-block";
       deleteButton.style.display = "inline-block";
     })
@@ -154,6 +139,24 @@ submitButton.addEventListener("click", () => {
     });
 });
 
+const populateEditForm = (eventId) => {
+  fetch(`${DEPLOY_URL}/events/${eventId}`)
+    .then((response) => response.json())
+    .then((event) => {
+      document.getElementById("editTime").value = event.time;
+      document.getElementById("editActivity").value = event.activity;
+      document.getElementById("editLocation").value = event.location;
+      document.getElementById("editNotes").value = event.notes;
+
+      addFormContainer.style.display = "none";
+      editFormContainer.style.display = "block";
+      addButton.style.display = "none";
+      deleteButton.style.display = "none";
+    })
+    .catch((error) => {
+      console.error("Error fetching event:", error);
+    });
+};
 
 // Call the displayEvents function initially to load the events
 displayEvents();
