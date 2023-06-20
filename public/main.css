@@ -29,11 +29,17 @@
 #content {
   background-color: #4BC0C0;
   flex-basis: 50%;
-  align-items: center
+  align-items: center;
 }
 
 .event {
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.event input[type="checkbox"] {
+  margin-right: 10px;
 }
 
 #motivational {
@@ -48,4 +54,3 @@
   align-items: center;
   margin-bottom: 0;
 }
-
