@@ -18,7 +18,7 @@
           <div id="formContainer" style="display: none;">
             <form id="events">
               <label for="time">Time:</label>
-              <input type="text" id="time" placeholder="HH:MM:SS">
+              <input type="text" id="time" placeholder="24 Hr">
             
               <label for="activity">Activity:</label>
               <input type="text" id="activity" placeholder="Enter Activity">
@@ -29,17 +29,10 @@
               <label for="notes">Notes:</label>
               <input type="text" id="notes" placeholder="Enter Notes">
             
-              <div id="exampleFormat">
-                <p>Example Format:</p>
-                <p>Time: 24H Time</p>
-                <p>Activity: Example activity</p>
-                <p>Location: Example location</p>
-                <p>Notes: Example notes</p>
-              </div>
-            
               <button type="submit" id="submitButton">Submit</button>
             </form>
           </div>
+          <button id="refreshButton">Refresh</button>
           <button id="deleteButton">Delete</button>
         </div>
         
