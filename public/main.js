@@ -8,13 +8,10 @@ const displayEvents = () => {
       contentContainer.innerHTML = '';
 
       data.forEach(event => {
-        const eventElement = document.createElement('span'); 
-        eventElement.innerHTML = `
-          <p>Time: ${event.time}</p>
-          <p>Activity: ${event.activity}</p>
-          <p>Location: ${event.location}</p>
-          <p>Notes: ${event.notes}</p>
-        `;
+        const eventElement = document.createElement('span');
+        const eventContent = document.createElement('p');
+        eventContent.textContent = `${event.time} ${event.activity} ${event.location} ${event.notes}`;
+        eventElement.appendChild(eventContent);
         contentContainer.appendChild(eventElement);
       });
     })
