@@ -1,29 +1,28 @@
 const displayEvents = () => {
   fetch(`${DEPLOY_URL}/events`)
-  .then(response => {
-    console.log("Response:", response); 
-    return response.json();
-  })
-  .then(data => {
-    
-    contentContainer.innerHTML = '';
-    
-    
-    data.forEach(event => {
-      const eventElement = document.createElement('div');
-      eventElement.innerHTML = `
-      <p>Time: ${event.time}</p>
-      <p>Activity: ${event.activity}</p>
-      <p>Location: ${event.location}</p>
-      <p>Notes: ${event.notes}</p>
-      `;
-      contentContainer.appendChild(eventElement);
+    .then(response => {
+      console.log("Response:", response);
+      return response.json();
+    })
+    .then(data => {
+      contentContainer.innerHTML = '';
+
+      data.forEach(event => {
+        const eventElement = document.createElement('span'); 
+        eventElement.innerHTML = `
+          <p>Time: ${event.time}</p>
+          <p>Activity: ${event.activity}</p>
+          <p>Location: ${event.location}</p>
+          <p>Notes: ${event.notes}</p>
+        `;
+        contentContainer.appendChild(eventElement);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching events:', error);
     });
-  })
-  .catch(error => {
-    console.error('Error fetching events:', error);
-  });
 };
+
 
 const DEPLOY_URL = 'https://daily-planner-4ssy.onrender.com';
 
