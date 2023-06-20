@@ -44,16 +44,16 @@ document.getElementById("events").addEventListener("submit", function(event) {
 const refreshButton = document.getElementById('refreshButton');
 const contentContainer = document.getElementById('content');
 
-// Function to fetch and display events in the content container
+
 const displayEvents = () => {
-  // Send an HTTP GET request to fetch events from the server
+
   fetch('/events')
     .then(response => response.json())
     .then(data => {
-      // Clear the existing content
+   
       contentContainer.innerHTML = '';
 
-      // Display each event in the content container
+      
       data.forEach(event => {
         const eventElement = document.createElement('div');
         eventElement.innerHTML = `
