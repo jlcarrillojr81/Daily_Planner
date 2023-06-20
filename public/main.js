@@ -102,20 +102,27 @@ document.getElementById("events").addEventListener("submit", function (event) {
 });
 
 const populateEditForm = (eventId) => {
-  fetch(`${DEPLOY_URL}/events/${eventId}`) // Fetch the event using the event ID
-    .then(response => response.json())
-    .then(event => {
-      document.getElementById("time").value = event.time;
-      document.getElementById("activity").value = event.activity;
-      document.getElementById("location").value = event.location;
-      document.getElementById("notes").value = event.notes;
+  fetch(`${DEPLOY_URL}/events/${eventId}`, {
+    method: "PUT", // Use PUT method instead of POST
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Event updated:", data);
 
-      formContainer.style.display = 'block';
-      addButton.style.display = 'none';
-      deleteButton.style.display = 'none';
+      document.getElementById("events").reset();
+
+      displayEvents();
+
+      formContainer.style.display = "none";
+      addButton.style.display = "inline-block";
+      deleteButton.style.display = "inline-block";
     })
-    .catch(error => {
-      console.error('Error fetching event:', error);
+    .catch((error) => {
+      console.error("Error updating event:", error);
     });
 };
 
