@@ -51,16 +51,16 @@ app.get('/events/:id', async (req, res) => {
   });
 
 // post 
-  app.post('/events', async (req, res) => {
-    const { time, activity, location, notes } = req.body;
-    try {
-      const result = await pool.query('INSERT INTO events (time, activity, location, notes) VALUES ($1, $2, $3, $4, $5)RETURNING *', [time, activity, location, notes]);
-      res.status(201).json(result.rows[0]);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({error: 'Error inserting Events into daily_planner database'});
-    }
-  });
+app.post('/events', async (req, res) => {
+  const { time, activity, location, notes } = req.body;
+  try {
+    const result = await pool.query('INSERT INTO events (time, activity, location, notes) VALUES ($1, $2, $3, $4) RETURNING *', [time, activity, location, notes]);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error inserting Events into daily_planner database' });
+  }
+});
 
 // update
 app.put('/events/:id', async (req, res) => {
