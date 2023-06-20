@@ -4,7 +4,7 @@ const displayEvents = () => {
   fetch(`${DEPLOY_URL}/events`)
     .then(response => response.json())
     .then(data => {
-      eventData = data;
+      const eventData = data; // Change this line to assign data instead of eventData
 
       contentContainer.innerHTML = '';
 
