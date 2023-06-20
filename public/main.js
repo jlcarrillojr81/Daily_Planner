@@ -49,38 +49,34 @@ exitButton.addEventListener('click', () => { // Add this entire event listener
 
 refreshButton.addEventListener('click', displayEvents);
 
-document.getElementById("events").addEventListener("submit", function(event) {
-  event.preventDefault(); 
-  
+document.getElementById("events").addEventListener("submit", function (event) {
+  event.preventDefault();
+
   const time = document.getElementById("time").value;
   const activity = document.getElementById("activity").value;
   const location = document.getElementById("location").value;
   const notes = document.getElementById("notes").value;
-  
-  
+
   const formData = { time, activity, location, notes };
-  
-  console.log("FormData:", formData); 
-  
-  
+
   fetch(`${DEPLOY_URL}/events`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(formData) 
+    body: JSON.stringify(formData)
   })
-  .then(response => response.json())
-  .then(data => {
-    console.log("Event created:", data);
-    
-    document.getElementById("events").reset();
-    
-    displayEvents();
-  })
-  .catch(error => {
-    console.error("Error creating event:", error);
-  });
+    .then(response => response.json())
+    .then(data => {
+      console.log("Event created:", data);
+
+      document.getElementById("events").reset();
+
+      displayEvents();
+    })
+    .catch(error => {
+      console.error("Error creating event:", error);
+    });
 });
 
 // Call the displayEvents function initially to load the events
