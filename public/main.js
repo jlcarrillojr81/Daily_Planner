@@ -35,14 +35,12 @@ const exitButton = document.getElementById('exitButton'); // Add this line
 addButton.addEventListener('click', () => {
   formContainer.style.display = 'block';
   addButton.style.display = 'none';
-  refreshButton.style.display = 'none';
   deleteButton.style.display = 'none';
 });
 
 exitButton.addEventListener('click', () => { // Add this entire event listener
   formContainer.style.display = 'none';
   addButton.style.display = 'inline-block';
-  refreshButton.style.display = 'inline-block';
   deleteButton.style.display = 'inline-block';
 });
 
