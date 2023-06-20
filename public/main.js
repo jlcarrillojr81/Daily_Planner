@@ -4,7 +4,7 @@ const displayEvents = () => {
   fetch(`${DEPLOY_URL}/events`)
     .then(response => response.json())
     .then(data => {
-      const eventData = data; // Change this line to assign data instead of eventData
+      const eventData = data;
 
       contentContainer.innerHTML = '';
 
@@ -14,7 +14,7 @@ const displayEvents = () => {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.dataset.eventId = event.id; // Add this line
+        checkbox.dataset.eventId = event.id;
         eventElement.appendChild(checkbox);
 
         const eventContent = document.createElement('p');
