@@ -102,27 +102,53 @@ document.getElementById("events").addEventListener("submit", function (event) {
 });
 
 const populateEditForm = (eventId) => {
-  fetch(`${DEPLOY_URL}/events/${eventId}`, {
-    method: "PUT", // Use PUT method instead of POST
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  })
+  fetch(`${DEPLOY_URL}/events/${eventId}`)
     .then((response) => response.json())
-    .then((data) => {
-      console.log("Event updated:", data);
+    .then((event) => {
+      document.getElementById("time").value = event.time;
+      document.getElementById("activity").value = event.activity;
+      document.getElementById("location").value = event.location;
+      document.getElementById("notes").value = event.notes;
 
-      document.getElementById("events").reset();
+      formContainer.style.display = "block";
+      addButton.style.display = "none";
+      deleteButton.style.display = "none";
 
-      displayEvents();
+      const submitButton = document.getElementById("submit");
+      submitButton.addEventListener("click", () => {
+        const time = document.getElementById("time").value;
+        const activity = document.getElementById("activity").value;
+        const location = document.getElementById("location").value;
+        const notes = document.getElementById("notes").value;
 
-      formContainer.style.display = "none";
-      addButton.style.display = "inline-block";
-      deleteButton.style.display = "inline-block";
+        const updatedData = { time, activity, location, notes };
+
+        fetch(`${DEPLOY_URL}/events/${eventId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Event updated:", data);
+
+            document.getElementById("events").reset();
+
+            displayEvents();
+
+            formContainer.style.display = "none";
+            addButton.style.display = "inline-block";
+            deleteButton.style.display = "inline-block";
+          })
+          .catch((error) => {
+            console.error("Error updating event:", error);
+          });
+      });
     })
     .catch((error) => {
-      console.error("Error updating event:", error);
+      console.error("Error fetching event:", error);
     });
 };
 
