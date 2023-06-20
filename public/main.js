@@ -23,18 +23,30 @@ const displayEvents = () => {
     });
 };
 
-
 const DEPLOY_URL = 'https://daily-planner-4ssy.onrender.com';
 
 const contentContainer = document.getElementById('content');
 const formContainer = document.getElementById('formContainer');
 
 const addButton = document.getElementById('addButton');
+const refreshButton = document.getElementById('refreshButton');
+const deleteButton = document.getElementById('deleteButton');
+const exitButton = document.getElementById('exitButton'); // Add this line
+
 addButton.addEventListener('click', () => {
   formContainer.style.display = 'block';
+  addButton.style.display = 'none';
+  refreshButton.style.display = 'none';
+  deleteButton.style.display = 'none';
 });
 
-const refreshButton = document.getElementById('refreshButton');
+exitButton.addEventListener('click', () => { // Add this entire event listener
+  formContainer.style.display = 'none';
+  addButton.style.display = 'inline-block';
+  refreshButton.style.display = 'inline-block';
+  deleteButton.style.display = 'inline-block';
+});
+
 refreshButton.addEventListener('click', displayEvents);
 
 document.getElementById("events").addEventListener("submit", function(event) {
