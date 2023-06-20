@@ -48,7 +48,10 @@ const contentContainer = document.getElementById('content');
 const displayEvents = () => {
 
   fetch('/events')
-    .then(response => response.json())
+  .then(response => {
+    console.log("Response:", response); 
+    return response.json();
+  })
     .then(data => {
    
       contentContainer.innerHTML = '';
