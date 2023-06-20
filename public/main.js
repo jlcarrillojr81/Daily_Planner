@@ -13,6 +13,7 @@ const displayEvents = () => {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
+        checkbox.dataset.eventId = event.id; // Add this line
         eventElement.appendChild(checkbox);
 
         const eventContent = document.createElement('p');
@@ -33,8 +34,9 @@ const contentContainer = document.getElementById('content');
 const formContainer = document.getElementById('formContainer');
 
 const addButton = document.getElementById('addButton');
+const editButton = document.getElementById('editButton'); // Add this line
 const deleteButton = document.getElementById('deleteButton');
-const exitButton = document.getElementById('exitButton'); // Add this line
+const exitButton = document.getElementById('exitButton');
 
 addButton.addEventListener('click', () => {
   formContainer.style.display = 'block';
@@ -42,12 +44,27 @@ addButton.addEventListener('click', () => {
   deleteButton.style.display = 'none';
 });
 
-exitButton.addEventListener('click', () => { // Add this entire event listener
+editButton.addEventListener('click', () => { // Add this entire event listener
+  const checkedBoxes = document.querySelectorAll('.event input[type="checkbox"]:checked');
+
+  if (checkedBoxes.length === 0) {
+    alert("Please select an event to edit.");
+  } else if (checkedBoxes.length > 1) {
+    alert("Please only select one event!");
+  } else {
+    const selectedCheckbox = checkedBoxes[0];
+    const eventId = selectedCheckbox.dataset.eventId;
+    populateEditForm(eventId);
+  }
+});
+
+exitButton.addEventListener('click', () => {
+  document.getElementById("events").reset();
+
   formContainer.style.display = 'none';
   addButton.style.display = 'inline-block';
   deleteButton.style.display = 'inline-block';
 });
-
 
 document.getElementById("events").addEventListener("submit", function (event) {
   event.preventDefault();
@@ -74,7 +91,7 @@ document.getElementById("events").addEventListener("submit", function (event) {
 
       displayEvents();
 
-      formContainer.style.display = 'none'; 
+      formContainer.style.display = 'none';
       addButton.style.display = 'inline-block';
       deleteButton.style.display = 'inline-block';
     })
@@ -82,6 +99,19 @@ document.getElementById("events").addEventListener("submit", function (event) {
       console.error("Error creating event:", error);
     });
 });
+
+const populateEditForm = (eventId) => {
+  const event = data.find(event => event.id === eventId);
+
+  document.getElementById("time").value = event.time;
+  document.getElementById("activity").value = event.activity;
+  document.getElementById("location").value = event.location;
+  document.getElementById("notes").value = event.notes;
+
+  formContainer.style.display = 'block';
+  addButton.style.display = 'none';
+  deleteButton.style.display = 'none';
+};
 
 // Call the displayEvents function initially to load the events
 displayEvents();
