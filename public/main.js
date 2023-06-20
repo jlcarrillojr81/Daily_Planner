@@ -104,6 +104,8 @@ document.getElementById("events").addEventListener("submit", function (event) {
 
 const populateEditForm = (eventId) => {
   console.log("Event Data:", eventData);
+  console.log("Selected Event ID:", eventId);
+  
   const event = eventData.find(event => event.id === eventId);
   console.log("Selected Event:", event);
 
