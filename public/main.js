@@ -5,35 +5,36 @@ addButton.addEventListener('click', () => {
   formContainer.style.display = 'block';
 });
 
-document.getElementById("events").addEventListener("submit", function(event) {
-  event.preventDefault(); // Prevent the default form submission behavior
+refreshButton.addEventListener('click', displayEvents);
 
-  // Get the form input values
+document.getElementById("events").addEventListener("submit", function(event) {
+  event.preventDefault(); 
+
   const time = document.getElementById("time").value;
   const date = document.getElementById("date").value;
   const activity = document.getElementById("activity").value;
   const location = document.getElementById("location").value;
   const notes = document.getElementById("notes").value;
 
-  // Create an object with the form data
+ 
   const formData = { date, time, activity, location, notes };
 
-  console.log("FormData:", formData); // Log the form data
+  console.log("FormData:", formData); 
 
-  // Send an HTTP POST request to your server
+  
   fetch("/events", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(formData) // Serialize the form data as JSON
+    body: JSON.stringify(formData) 
   })
     .then(response => response.json())
     .then(data => {
       console.log("Event created:", data);
-      // Reset the form after successful submission
+      
       document.getElementById("events").reset();
-      // Refresh the displayed events
+   
       displayEvents();
     })
     .catch(error => {
@@ -74,8 +75,7 @@ const displayEvents = () => {
     });
 };
 
-// Add event listener to the refresh button
-refreshButton.addEventListener('click', displayEvents);
+
 
 // Call the displayEvents function initially to load the events
 displayEvents();
