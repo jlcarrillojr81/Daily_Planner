@@ -77,7 +77,7 @@
 
 #addForm input[type="text"],
 #addForm textarea {
-  width: 300px;
+  width: 100px;
   padding: 5px;
 }
 
