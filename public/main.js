@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   addButton.addEventListener('click', () => {
     addFormContainer.classList.toggle('form-displayed');
   });
-  
 
   exitButton.addEventListener('click', () => {
     addFormContainer.classList.add('hidden');
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           `;
         }).join('');
-  
+
         contentContainer.innerHTML = eventsHTML;
       } else {
         console.error('Failed to fetch events.');
