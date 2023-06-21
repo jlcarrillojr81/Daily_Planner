@@ -45,6 +45,9 @@ button:hover {
 }
 
 .event-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -53,15 +56,23 @@ button:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.event-item p {
+.event-details {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.event-details p {
   margin: 0;
   font-weight: bold;
 }
 
+.event-actions {
+  display: flex;
+  flex-direction: column;
+}
+
 .completed-checkbox {
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: middle;
+  margin-bottom: 5px;
 }
 
 .edit-button,
