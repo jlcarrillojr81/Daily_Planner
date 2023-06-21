@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Process the received events data
       events.forEach(event => {
         const eventElement = document.createElement('div');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+
         eventElement.textContent = `${event.time} ${event.activity} at ${event.location}: ${event.notes}`;
+        eventElement.appendChild(checkbox);
         contentContainer.appendChild(eventElement);
       });
     })
