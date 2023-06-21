@@ -20,6 +20,9 @@
 }
 
 #menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #36A2EB;
   width: 100vw;
   margin-top: 0;
@@ -42,7 +45,7 @@
   margin-right: 10px;
 }
 
-#motivational {
+#motivation {
   background-color: #9966FF;
   text-align: center;
   font-size: 32px;
@@ -58,9 +61,8 @@
 /* Style for the form */
 #addFormContainer {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-top: 20px;
 }
 
 #addForm {

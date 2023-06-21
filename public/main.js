@@ -1,17 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const menuContainer = document.getElementById('menu');
   const addButton = document.getElementById('addButton');
   const addFormContainer = document.getElementById('addFormContainer');
-  const addForm = document.getElementById('addForm');
   const exitButton = document.getElementById('exitButton');
+  const addForm = document.getElementById('addForm');
 
   addButton.addEventListener('click', () => {
-    addFormContainer.classList.remove('hidden'); // Show the form when the Add button is clicked
+    addFormContainer.classList.remove('hidden');
   });
 
   exitButton.addEventListener('click', () => {
-    addForm.reset(); // Reset the form fields
-    addFormContainer.classList.add('hidden'); // Hide the form
+    addFormContainer.classList.add('hidden');
   });
 
   addForm.addEventListener('submit', async (event) => {
