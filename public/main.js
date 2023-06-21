@@ -14,57 +14,47 @@ document.addEventListener('DOMContentLoaded', () => {
     addFormContainer.classList.add('hidden'); // Hide the form
   });
 
-  addForm.addEventListener('submit', (event) => {
+  addForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
+
     // Get the form input values
-    const time = document.getElementById('time').value;
-    const activity = document.getElementById('activity').value;
-    const location = document.getElementById('location').value;
-    const notes = document.getElementById('notes').value;
+    const timeInput = document.getElementById('time');
+    const activityInput = document.getElementById('activity');
+    const locationInput = document.getElementById('location');
+    const notesInput = document.getElementById('notes');
 
-    // Create the event object
-    const eventObject = {
-      time,
-      activity,
-      location,
-      notes
-    };
+    const time = timeInput.value;
+    const activity = activityInput.value;
+    const location = locationInput.value;
+    const notes = notesInput.value;
 
-    // Send a POST request to add the event to the server
-    fetch('/events', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(eventObject)
-    })
-      .then(response => response.json())
-      .then(newEvent => {
-        // Process the newly added event data
-        const eventElement = document.createElement('div');
-        eventElement.textContent = `${newEvent.time} ${newEvent.activity} at ${newEvent.location}: ${newEvent.notes}`;
-        contentContainer.appendChild(eventElement);
-      })
-      .catch(error => console.error('Error adding event:', error));
+    // Send a POST request to the server
+    try {
+      const response = await fetch('/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ time, activity, location, notes })
+      });
 
-    addForm.reset(); // Reset the form fields
-    addFormContainer.classList.add('hidden'); // Hide the form after submission
+      if (response.ok) {
+        // Reset the form fields
+        addForm.reset();
+
+        // Hide the form
+        addFormContainer.classList.add('hidden');
+
+        // Fetch and display the updated events
+        // ...
+      } else {
+        console.error('Failed to add event.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   });
 
-  // Fetch all events from the server
-  fetch('/events')
-    .then(response => response.json())
-    .then(events => {
-      // Process the received events data
-      events.forEach(event => {
-        const eventElement = document.createElement('div');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-
-        eventElement.textContent = `${event.time} ${event.activity} at ${event.location}: ${event.notes}`;
-        eventElement.insertBefore(checkbox, eventElement.firstChild);
-        contentContainer.appendChild(eventElement);
-      });
-    })
-    .catch(error => console.error('Error fetching events:', error));
+  // Fetch and display events
+  // ...
 });
