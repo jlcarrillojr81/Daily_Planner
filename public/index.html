@@ -1,70 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Planner</title>
   <link rel="stylesheet" href="main.css">
-  <script src="main.js" defer></script>
 </head>
+
 <body>
-  <div class="container" id="main">
-    <div class="container" id="title">
-      <h1>Daily Planner</h1>
-    </div>
+  <h1>Daily Planner</h1>
+  
+  <h2>Create Event</h2>
+  <form id="create-form">
+    <label for="time">Time:</label>
+    <input type="text" id="time" required>
+    <label for="activity">Activity:</label>
+    <input type="text" id="activity" required>
+    <label for="location">Location:</label>
+    <input type="text" id="location" required>
+    <label for="notes">Notes:</label>
+    <textarea id="notes"></textarea>
+    <button type="submit">Create</button>
+  </form>
 
-    <div class="container" id="menu">
-      <button id="addButton">Add</button>
-      <button id="editButton">Edit</button>
-      <button id="deleteButton">Delete</button>
-      <div id="addFormContainer" class="container hidden">
-        <form id="add-form">
-          <label for="time">Time:</label>
-          <input type="text" id="time" placeholder="24 Hr">
+  <h2>Update Event</h2>
+  <form id="update-form">
+    <label for="update-id">Event ID:</label>
+    <input type="text" id="update-id" required>
+    <label for="update-time">Time:</label>
+    <input type="text" id="update-time" required>
+    <label for="update-activity">Activity:</label>
+    <input type="text" id="update-activity" required>
+    <label for="update-location">Location:</label>
+    <input type="text" id="update-location" required>
+    <label for="update-notes">Notes:</label>
+    <textarea id="update-notes"></textarea>
+    <button type="submit">Update</button>
+  </form>
 
-          <label for="activity">Activity:</label>
-          <input type="text" id="activity" placeholder="Activity">
+  <h2>Events</h2>
+  <ul id="event-list"></ul>
 
-          <label for="location">Location:</label>
-          <input type="text" id="location" placeholder="Location">
-
-          <label for="notes">Notes:</label>
-          <input type="text" id="notes" placeholder="Enter Notes">
-
-          <div class="form-buttons">
-            <button type="submit">Submit</button>
-            <button type="button" id="exitButton">Exit</button>
-          </div>
-        </form>
-      </div>
-
-      <div id="editFormContainer" class="container hidden">
-        <form id="edit-Form">
-          <label for="edit-time">Time:</label>
-          <input type="text" id="edit-time" placeholder="24 Hr">
-
-          <label for="edit-activity">Activity:</label>
-          <input type="text" id="edit-activity" placeholder="Activity">
-
-          <label for="edit-location">Location:</label>
-          <input type="text" id="edit-location" placeholder="Location">
-
-          <label for="edit-notes">Notes:</label>
-          <input type="text" id="edit-notes" placeholder="Enter Notes">
-
-          <div class="form-buttons">
-            <button type="submit">Submit</button>
-            <button type="button" id="edit-exitButton">Exit</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="container" id="content">
-    </div>
-
-    <div class="container" id="motivation">
-    </div>
-  </div>
+  <script src="main.js"></script>
 </body>
+
 </html>

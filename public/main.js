@@ -1,130 +1,156 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const addButton = document.getElementById('addButton');
-  const editButton = document.getElementById('editButton');
-  const deleteButton = document.getElementById('deleteButton');
-  const addFormContainer = document.getElementById('addFormContainer');
-  const editFormContainer = document.getElementById('editFormContainer');
-  const exitButton = document.getElementById('exitButton');
-  const editExitButton = document.getElementById('edit-exitButton');
-  const addForm = document.getElementById('add-Form');
-  const editForm = document.getElementById('edit-Form');
-  const contentContainer = document.getElementById('content');
+  const createForm = document.getElementById('create-form');
+  const updateForm = document.getElementById('update-form');
+  const eventList = document.getElementById('event-list');
 
-  // Initialize activeForm variable
-  let activeForm = '';
+  // Create Event
+  createForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  // Event listener for exit button
-  exitButton.addEventListener('click', () => {
-    addFormContainer.classList.remove('form-displayed');
-    editFormContainer.classList.remove('form-displayed');
-    activeForm = '';
-  });
+    const timeInput = document.getElementById('time');
+    const activityInput = document.getElementById('activity');
+    const locationInput = document.getElementById('location');
+    const notesInput = document.getElementById('notes');
 
-  // Event listener for add button
-  addButton.addEventListener('click', () => {
-    if (activeForm === 'add') {
-      addFormContainer.classList.remove('form-displayed');
-      activeForm = '';
-    } else {
-      addFormContainer.classList.add('form-displayed');
-      editFormContainer.classList.remove('form-displayed');
-      activeForm = 'add';
-    }
-  });
+    const eventData = {
+      time: timeInput.value,
+      activity: activityInput.value,
+      location: locationInput.value,
+      notes: notesInput.value,
+    };
 
-  // Event listener for edit button
-  editButton.addEventListener('click', () => {
-    if (activeForm === 'edit') {
-      editFormContainer.classList.remove('form-displayed');
-      activeForm = '';
-    } else {
-      editFormContainer.classList.add('form-displayed');
-      addFormContainer.classList.remove('form-displayed');
-      activeForm = 'edit';
-    }
-  });
-
-  addForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    // Rest of the add form submission code...
-  });
-
-  editForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const checkedEvents = document.querySelectorAll('.event input[type="checkbox"]:checked');
-    if (checkedEvents.length === 0) {
-      alert('Please check an Event');
-      return;
-    }
-    if (checkedEvents.length > 1) {
-      alert('Only select one Event');
-      return;
-    }
-
-    const eventId = checkedEvents[0].dataset.id;
-
-    // Get the form input values
-    const timeInput = editForm.elements['edit-time'];
-    const activityInput = editForm.elements['edit-activity'];
-    const locationInput = editForm.elements['edit-location'];
-    const notesInput = editForm.elements['edit-notes'];
-
-    const time = timeInput.value;
-    const activity = activityInput.value;
-    const location = locationInput.value;
-    const notes = notesInput.value;
-
-    // Send a PUT request to update the selected event
     try {
-      const response = await fetch(`/events/${eventId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ time, activity, location, notes })
+      const response = await fetch('/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventData),
       });
 
-      if (response.ok) {
-        // Reset the form fields
-        editForm.reset();
-
-        // Hide the edit form
-        editFormContainer.classList.remove('form-displayed');
-
-        // Fetch and display the updated events
-        fetchEvents();
+      if (response.status === 201) {
+        const createdEvent = await response.json();
+        displayEvent(createdEvent);
+        timeInput.value = '';
+        activityInput.value = '';
+        locationInput.value = '';
+        notesInput.value = '';
       } else {
-        console.error('Failed to update event.');
+        console.error('Error creating event:', response.status, response.statusText);
       }
-    } catch (error) {
-      console.error('Error:', error);
+    } catch (err) {
+      console.error('Error creating event:', err);
     }
   });
 
+  // Update Event
+  updateForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const idInput = document.getElementById('update-id');
+    const timeInput = document.getElementById('update-time');
+    const activityInput = document.getElementById('update-activity');
+    const locationInput = document.getElementById('update-location');
+    const notesInput = document.getElementById('update-notes');
+
+    const eventData = {
+      time: timeInput.value,
+      activity: activityInput.value,
+      location: locationInput.value,
+      notes: notesInput.value,
+    };
+
+    try {
+      const response = await fetch(`/events/${idInput.value}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventData),
+      });
+
+      if (response.status === 200) {
+        const updatedEvent = await response.json();
+        updateEventInList(updatedEvent);
+        idInput.value = '';
+        timeInput.value = '';
+        activityInput.value = '';
+        locationInput.value = '';
+        notesInput.value = '';
+      } else {
+        console.error('Error updating event:', response.status, response.statusText);
+      }
+    } catch (err) {
+      console.error('Error updating event:', err);
+    }
+  });
+
+  // Delete Event
+  const deleteEvent = async (id) => {
+    try {
+      const response = await fetch(`/events/${id}`, { method: 'DELETE' });
+
+      if (response.status === 200) {
+        const deletedEvent = await response.json();
+        removeEventFromList(deletedEvent.id);
+      } else {
+        console.error('Error deleting event:', response.status, response.statusText);
+      }
+    } catch (err) {
+      console.error('Error deleting event:', err);
+    }
+  };
+
+  // Display Event in List
+  const displayEvent = (event) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <strong>ID:</strong> ${event.id}<br>
+      <strong>Time:</strong> ${event.time}<br>
+      <strong>Activity:</strong> ${event.activity}<br>
+      <strong>Location:</strong> ${event.location}<br>
+      <strong>Notes:</strong> ${event.notes}<br>
+      <button class="delete-button" data-id="${event.id}">Delete</button>
+    `;
+    eventList.appendChild(li);
+
+    const deleteButton = li.querySelector('.delete-button');
+    deleteButton.addEventListener('click', () => deleteEvent(event.id));
+  };
+
+  // Update Event in List
+  const updateEventInList = (event) => {
+    const listItem = document.querySelector(`li[data-id="${event.id}"]`);
+    listItem.innerHTML = `
+      <strong>ID:</strong> ${event.id}<br>
+      <strong>Time:</strong> ${event.time}<br>
+      <strong>Activity:</strong> ${event.activity}<br>
+      <strong>Location:</strong> ${event.location}<br>
+      <strong>Notes:</strong> ${event.notes}<br>
+      <button class="delete-button" data-id="${event.id}">Delete</button>
+    `;
+
+    const deleteButton = listItem.querySelector('.delete-button');
+    deleteButton.addEventListener('click', () => deleteEvent(event.id));
+  };
+
+  // Remove Event from List
+  const removeEventFromList = (id) => {
+    const listItem = document.querySelector(`li[data-id="${id}"]`);
+    listItem.remove();
+  };
+
+  // Fetch Events
   const fetchEvents = async () => {
     try {
       const response = await fetch('/events');
-      if (response.ok) {
+
+      if (response.status === 200) {
         const events = await response.json();
-        // Generate HTML for events and append it to the content container
-        const eventsHTML = events.map((event) => {
-          return `
-            <div class="event">
-              <input type="checkbox" data-id="${event.id}">
-              <p>${event.time} ${event.activity} at ${event.location}: ${event.notes}</p>
-            </div>
-          `;
-        }).join('');
-  
-        contentContainer.innerHTML = eventsHTML;
+        events.forEach(displayEvent);
       } else {
-        console.error('Failed to fetch events.');
+        console.error('Error fetching events:', response.status, response.statusText);
       }
-    } catch (error) {
-      console.error('Error:', error);
+    } catch (err) {
+      console.error('Error fetching events:', err);
     }
-  };  
+  };
 
   fetchEvents();
 });
