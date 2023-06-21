@@ -1,194 +1,100 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const createForm = document.getElementById('create-form');
-  const updateForm = document.getElementById('update-form');
-  const eventList = document.getElementById('event-list');
+// Display Event in List
+const displayEvent = (event) => {
+  const li = document.createElement('li');
+  li.dataset.id = event.id;
+  li.innerHTML = `
+    <strong>ID:</strong> ${event.id}<br>
+    <strong>Time:</strong> ${event.time}<br>
+    <strong>Activity:</strong> ${event.activity}<br>
+    <strong>Location:</strong> ${event.location}<br>
+    <strong>Notes:</strong> ${event.notes}<br>
+    <div>
+      <label for="completed-${event.id}">Completed:</label>
+      <input type="checkbox" id="completed-${event.id}" class="completed-checkbox" data-id="${event.id}">
+    </div>
+    <div class="completion-time" data-id="${event.id}"></div>
+    <button class="delete-button">Delete</button>
+    <button class="update-button">Update</button>
+  `;
 
-  // Create Event
-  createForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const timeInput = document.getElementById('time');
-    const activityInput = document.getElementById('activity');
-    const locationInput = document.getElementById('location');
-    const notesInput = document.getElementById('notes');
-
-    const eventData = {
-      time: timeInput.value,
-      activity: activityInput.value,
-      location: locationInput.value,
-      notes: notesInput.value,
-    };
-
-    try {
-      const response = await fetch('/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventData),
-      });
-
-      if (response.status === 201) {
-        const createdEvent = await response.json();
-        displayEvent(createdEvent);
-        timeInput.value = '';
-        activityInput.value = '';
-        locationInput.value = '';
-        notesInput.value = '';
-      } else {
-        console.error('Error creating event:', response.status, response.statusText);
-      }
-    } catch (err) {
-      console.error('Error creating event:', err);
-    }
+  const sortedListItems = Array.from(eventList.getElementsByTagName('li')).sort((a, b) => {
+    return a.dataset.id - b.dataset.id;
   });
 
-  // Update Event
-  const populateUpdateForm = async (id) => {
+  const insertIndex = sortedListItems.findIndex((item) => item.dataset.id > event.id);
+  if (insertIndex !== -1) {
+    eventList.insertBefore(li, sortedListItems[insertIndex]);
+  } else {
+    eventList.appendChild(li);
+  }
+
+  const deleteButton = li.querySelector('.delete-button');
+  deleteButton.addEventListener('click', () => deleteEvent(event.id));
+
+  const updateButton = li.querySelector('.update-button');
+  updateButton.addEventListener('click', () => populateUpdateForm(event.id));
+
+  const completedCheckbox = li.querySelector(`#completed-${event.id}`);
+  completedCheckbox.addEventListener('change', () => handleCompletedCheckbox(event.id));
+
+  const completionTime = li.querySelector(`.completion-time[data-id="${event.id}"]`);
+  if (event.completed) {
+    completedCheckbox.checked = true;
+    completionTime.textContent = `Completed at: ${event.completionTime}`;
+  }
+};
+
+// Handle Completed Checkbox
+const handleCompletedCheckbox = async (eventId) => {
+  const checkbox = document.querySelector(`.completed-checkbox[data-id="${eventId}"]`);
+  const completionTime = document.querySelector(`.completion-time[data-id="${eventId}"]`);
+
+  if (checkbox.checked) {
+    const currentTime = new Date().toLocaleTimeString();
+    completionTime.textContent = `Completed at: ${currentTime}`;
+
     try {
-      const response = await fetch(`/events/${id}`);
+      const response = await fetch(`/events/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          completed: true,
+          completionTime: currentTime,
+        }),
+      });
 
       if (response.status === 200) {
-        const eventToUpdate = await response.json();
-
-        const timeInput = document.getElementById('update-time');
-        const activityInput = document.getElementById('update-activity');
-        const locationInput = document.getElementById('update-location');
-        const notesInput = document.getElementById('update-notes');
-
-        timeInput.value = eventToUpdate.time;
-        activityInput.value = eventToUpdate.activity;
-        locationInput.value = eventToUpdate.location;
-        notesInput.value = eventToUpdate.notes;
-
-        updateForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-
-          const eventData = {
-            time: timeInput.value,
-            activity: activityInput.value,
-            location: locationInput.value,
-            notes: notesInput.value,
-          };
-
-          try {
-            const response = await fetch(`/events/${id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(eventData),
-            });
-
-            if (response.status === 200) {
-              const updatedEvent = await response.json();
-              updateEventInList(updatedEvent);
-              timeInput.value = '';
-              activityInput.value = '';
-              locationInput.value = '';
-              notesInput.value = '';
-            } else {
-              console.error('Error updating event:', response.status, response.statusText);
-            }
-          } catch (err) {
-            console.error('Error updating event:', err);
-          }
-        });
+        console.log('Event marked as completed successfully');
       } else {
-        console.error('Error retrieving event:', response.status, response.statusText);
+        console.error('Error marking event as completed:', response.status, response.statusText);
       }
     } catch (err) {
-      console.error('Error retrieving event:', err);
+      console.error('Error marking event as completed:', err);
     }
-  };
+  } else {
+    completionTime.textContent = '';
 
-  // Delete Event
-  const deleteEvent = async (id) => {
-    if (confirm('Are you sure you want to delete this event?')) {
-      try {
-        const response = await fetch(`/events/${id}`, { method: 'DELETE' });
-
-        if (response.status === 200) {
-          const deletedEvent = await response.json();
-          removeEventFromList(deletedEvent.id);
-        } else {
-          console.error('Error deleting event:', response.status, response.statusText);
-        }
-      } catch (err) {
-        console.error('Error deleting event:', err);
-      }
-    }
-  };
-
-  // Display Event in List
-  const displayEvent = (event) => {
-    const li = document.createElement('li');
-    li.dataset.id = event.id;
-    li.innerHTML = `
-      <strong>ID:</strong> ${event.id}<br>
-      <strong>Time:</strong> ${event.time}<br>
-      <strong>Activity:</strong> ${event.activity}<br>
-      <strong>Location:</strong> ${event.location}<br>
-      <strong>Notes:</strong> ${event.notes}<br>
-      <button class="delete-button">Delete</button>
-      <button class="update-button">Update</button>
-    `;
-
-    const sortedListItems = Array.from(eventList.getElementsByTagName('li')).sort((a, b) => {
-      return a.dataset.id - b.dataset.id;
-    });
-
-    const insertIndex = sortedListItems.findIndex((item) => item.dataset.id > event.id);
-    if (insertIndex !== -1) {
-      eventList.insertBefore(li, sortedListItems[insertIndex]);
-    } else {
-      eventList.appendChild(li);
-    }
-
-    const deleteButton = li.querySelector('.delete-button');
-    deleteButton.addEventListener('click', () => deleteEvent(event.id));
-
-    const updateButton = li.querySelector('.update-button');
-    updateButton.addEventListener('click', () => populateUpdateForm(event.id));
-  };
-
-  // Update Event in List
-  const updateEventInList = (event) => {
-    const listItem = document.querySelector(`li[data-id="${event.id}"]`);
-    listItem.innerHTML = `
-      <strong>ID:</strong> ${event.id}<br>
-      <strong>Time:</strong> ${event.time}<br>
-      <strong>Activity:</strong> ${event.activity}<br>
-      <strong>Location:</strong> ${event.location}<br>
-      <strong>Notes:</strong> ${event.notes}<br>
-      <button class="delete-button">Delete</button>
-      <button class="update-button">Update</button>
-    `;
-
-    const deleteButton = listItem.querySelector('.delete-button');
-    deleteButton.addEventListener('click', () => deleteEvent(event.id));
-
-    const updateButton = listItem.querySelector('.update-button');
-    updateButton.addEventListener('click', () => populateUpdateForm(event.id));
-  };
-
-  // Remove Event from List
-  const removeEventFromList = (id) => {
-    const listItem = document.querySelector(`li[data-id="${id}"]`);
-    listItem.remove();
-  };
-
-  // Fetch Events
-  const fetchEvents = async () => {
     try {
-      const response = await fetch('/events');
+      const response = await fetch(`/events/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          completed: false,
+          completionTime: null,
+        }),
+      });
 
       if (response.status === 200) {
-        const events = await response.json();
-        events.forEach(displayEvent);
+        console.log('Event marked as incomplete successfully');
       } else {
-        console.error('Error fetching events:', response.status, response.statusText);
+        console.error('Error marking event as incomplete:', response.status, response.statusText);
       }
     } catch (err) {
-      console.error('Error fetching events:', err);
+      console.error('Error marking event as incomplete:', err);
     }
-  };
-
-  fetchEvents();
-});
+  }
+};
