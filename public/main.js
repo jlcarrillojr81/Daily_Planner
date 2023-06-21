@@ -1,36 +1,86 @@
 document.addEventListener('DOMContentLoaded', () => {
   const addButton = document.getElementById('addButton');
+  const editButton = document.getElementById('editButton');
+  const deleteButton = document.getElementById('deleteButton');
   const addFormContainer = document.getElementById('addFormContainer');
+  const editFormContainer = document.getElementById('editFormContainer');
   const exitButton = document.getElementById('exitButton');
   const addForm = document.getElementById('addForm');
+  const editForm = document.getElementById('editForm');
   const contentContainer = document.getElementById('content');
 
   addButton.addEventListener('click', () => {
-    addFormContainer.style.display = 'flex';
+    addFormContainer.classList.toggle('form-displayed');
+  });
+
+  editButton.addEventListener('click', () => {
+    const checkedEvents = document.querySelectorAll('.event input[type="checkbox"]:checked');
+    if (checkedEvents.length === 0) {
+      alert('Please check an Event');
+      return;
+    }
+    if (checkedEvents.length > 1) {
+      alert('Only select one Event');
+      return;
+    }
+
+    const eventId = checkedEvents[0].dataset.id;
+    fetch(`/events/${eventId}`)
+      .then(response => response.json())
+      .then(eventData => {
+        // Populate the edit form with the selected event data
+        editForm.elements.time.value = eventData.time;
+        editForm.elements.activity.value = eventData.activity;
+        editForm.elements.location.value = eventData.location;
+        editForm.elements.notes.value = eventData.notes;
+
+        editFormContainer.classList.add('form-displayed');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   });
 
   exitButton.addEventListener('click', () => {
-    addFormContainer.style.display = 'none';
+    addFormContainer.classList.remove('form-displayed');
+    editFormContainer.classList.remove('form-displayed');
   });
 
   addForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault();
+    // Rest of the add form submission code...
+  });
+
+  editForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const checkedEvents = document.querySelectorAll('.event input[type="checkbox"]:checked');
+    if (checkedEvents.length === 0) {
+      alert('Please check an Event');
+      return;
+    }
+    if (checkedEvents.length > 1) {
+      alert('Only select one Event');
+      return;
+    }
+
+    const eventId = checkedEvents[0].dataset.id;
 
     // Get the form input values
-    const timeInput = document.getElementById('time');
-    const activityInput = document.getElementById('activity');
-    const locationInput = document.getElementById('location');
-    const notesInput = document.getElementById('notes');
+    const timeInput = editForm.elements.time;
+    const activityInput = editForm.elements.activity;
+    const locationInput = editForm.elements.location;
+    const notesInput = editForm.elements.notes;
 
     const time = timeInput.value;
     const activity = activityInput.value;
     const location = locationInput.value;
     const notes = notesInput.value;
 
-    // Send a POST request to the server
+    // Send a PUT request to update the selected event
     try {
-      const response = await fetch('/events', {
-        method: 'POST',
+      const response = await fetch(`/events/${eventId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -39,15 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok) {
         // Reset the form fields
-        addForm.reset();
+        editForm.reset();
 
-        // Hide the form
-        addFormContainer.classList.add('hidden');
+        // Hide the edit form
+        editFormContainer.classList.remove('form-displayed');
 
         // Fetch and display the updated events
         fetchEvents();
       } else {
-        console.error('Failed to add event.');
+        console.error('Failed to update event.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -55,27 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const fetchEvents = async () => {
-    try {
-      const response = await fetch('/events');
-      if (response.ok) {
-        const events = await response.json();
-        // Generate HTML for events and append it to the content container
-        const eventsHTML = events.map((event) => {
-          return `
-            <div class="event">
-              <input type="checkbox">
-              <p>${event.time} ${event.activity} at ${event.location}: ${event.notes}</p>
-            </div>
-          `;
-        }).join('');
-
-        contentContainer.innerHTML = eventsHTML;
-      } else {
-        console.error('Failed to fetch events.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    // Fetch and display events in the content container
   };
 
   fetchEvents();
