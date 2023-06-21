@@ -18,6 +18,26 @@
     <button id="addButton">Add</button>
     <button id="editButton">Edit</button>
     <button id="deleteButton">Delete</button>
+    <div id="addFormContainer" class="container hidden">
+      <form id="addForm">
+        <label for="time">Time:</label>
+        <input type="text" id="time" placeholder="24 Hr">
+  
+        <label for="activity">Activity:</label>
+        <input type="text" id="activity" placeholder="Activity">
+  
+        <label for="location">Location:</label>
+        <input type="text" id="location" placeholder="Location">
+  
+        <label for="notes">Notes:</label>
+        <input type="text" id="notes" placeholder="Enter Notes">
+  
+        <div class="form-buttons">
+          <button type="submit">Submit</button>
+          <button type="button" id="exitButton">Exit</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <div class="container" id="content">
@@ -26,26 +46,7 @@
   <div class="container" id="motivation">
   </div>
 
-  <div id="addFormContainer" class="container hidden">
-    <form id="addForm">
-      <label for="time">Time:</label>
-      <input type="text" id="time" placeholder="24 Hr">
-
-      <label for="activity">Activity:</label>
-      <input type="text" id="activity" placeholder="Activity">
-
-      <label for="location">Location:</label>
-      <input type="text" id="location" placeholder="Location">
-
-      <label for="notes">Notes:</label>
-      <input type="text" id="notes" placeholder="Enter Notes">
-
-      <div class="form-buttons">
-        <button type="submit">Submit</button>
-        <button type="button" id="exitButton">Exit</button>
-      </div>
-    </form>
-  </div>
+  
   </div>
 </body>
 </html>
