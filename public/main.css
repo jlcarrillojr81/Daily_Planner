@@ -89,3 +89,8 @@
 .hidden {
   display: none;
 }
+
+.button {
+  padding: 5px 10px;
+  height: 30px; /* Adjust the height to your desired value */
+}
