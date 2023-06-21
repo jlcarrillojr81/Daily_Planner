@@ -3,7 +3,6 @@ const displayEvent = (event) => {
   const li = document.createElement('li');
   li.dataset.id = event.id;
   li.innerHTML = `
-    <strong>ID:</strong> ${event.id}<br>
     <strong data-type="time">Time:</strong> ${event.time}<br>
     <strong>Activity:</strong> ${event.activity}<br>
     <strong>Location:</strong> ${event.location}<br>
