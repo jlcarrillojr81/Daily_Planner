@@ -86,9 +86,10 @@
 }
 
 /* Hidden class to hide the form */
-.hidden {
-  display: none;
+.form-displayed {
+  display: flex;
 }
+
 
 .button {
   padding: 5px 10px;
