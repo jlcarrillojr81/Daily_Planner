@@ -4,7 +4,7 @@ const displayEvent = (event) => {
   li.dataset.id = event.id;
   li.innerHTML = `
     <strong>ID:</strong> ${event.id}<br>
-    <strong>Time:</strong> ${event.time}<br>
+    <strong data-type="time">Time:</strong> ${event.time}<br>
     <strong>Activity:</strong> ${event.activity}<br>
     <strong>Location:</strong> ${event.location}<br>
     <strong>Notes:</strong> ${event.notes}<br>
@@ -18,7 +18,9 @@ const displayEvent = (event) => {
   `;
 
   const sortedListItems = Array.from(eventList.getElementsByTagName('li')).sort((a, b) => {
-    return a.dataset.id - b.dataset.id;
+    const timeA = a.querySelector('strong[data-type="time"]').textContent;
+    const timeB = b.querySelector('strong[data-type="time"]').textContent;
+    return timeA.localeCompare(timeB);
   });
 
   const insertIndex = sortedListItems.findIndex((item) => item.dataset.id > event.id);
