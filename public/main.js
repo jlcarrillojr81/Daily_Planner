@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const contentContainer = document.getElementById('content');
 
   addButton.addEventListener('click', () => {
-    addFormContainer.classList.remove('hidden');
+    addFormContainer.classList.toggle('form-displayed');
   });
+  
 
   exitButton.addEventListener('click', () => {
     addFormContainer.classList.add('hidden');
@@ -64,11 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
           return `
             <div class="event">
               <input type="checkbox">
-              <p>${event.activity}</p>
+              <p>${event.time} ${event.activity} at ${event.location}: ${event.notes}</p>
             </div>
           `;
         }).join('');
-
+  
         contentContainer.innerHTML = eventsHTML;
       } else {
         console.error('Failed to fetch events.');
