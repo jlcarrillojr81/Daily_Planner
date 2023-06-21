@@ -60,10 +60,15 @@
 
 /* Style for the form */
 #addFormContainer {
+  display: none;
+}
+
+#addFormContainer {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
 }
+
 
 #addForm {
   display: flex;

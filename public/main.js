@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const addFormContainer = document.getElementById('addFormContainer');
   const exitButton = document.getElementById('exitButton');
   const addForm = document.getElementById('addForm');
+  const contentContainer = document.getElementById('content');
 
   addButton.addEventListener('click', () => {
     addFormContainer.classList.remove('hidden');
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addFormContainer.classList.add('hidden');
 
         // Fetch and display the updated events
-        // ...
+        fetchEvents();
       } else {
         console.error('Failed to add event.');
       }
@@ -53,6 +54,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Fetch and display events
-  // ...
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('/events');
+      if (response.ok) {
+        const events = await response.json();
+        // Generate HTML for events and append it to the content container
+        const eventsHTML = events.map((event) => {
+          return `
+            <div class="event">
+              <input type="checkbox">
+              <p>${event.activity}</p>
+            </div>
+          `;
+        }).join('');
+
+        contentContainer.innerHTML = eventsHTML;
+      } else {
+        console.error('Failed to fetch events.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  fetchEvents();
 });
