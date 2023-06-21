@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const displayEvent = (event) => {
     const li = document.createElement('li');
-    li.dataset.id = event.id;
+    li.setAttribute('data-id', event.id);
     li.innerHTML = `
       <strong>Time:</strong> ${event.time}<br>
       <strong>ID:</strong> ${event.id}<br>
@@ -136,12 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(`/api/events/${eventId}`);
       if (response.ok) {
-        const eventData = await response.json();
-        updateForm.eventId.value = eventData.id;
-        updateForm.time.value = eventData.time;
-        updateForm.activity.value = eventData.activity;
-        updateForm.location.value = eventData.location;
-        updateForm.notes.value = eventData.notes;
+        const event = await response.json();
+        updateForm.elements['id'].value = event.id;
+        updateForm.elements['time'].value = event.time;
+        updateForm.elements['activity'].value = event.activity;
+        updateForm.elements['location'].value = event.location;
+        updateForm.elements['notes'].value = event.notes;
       } else {
         console.error('Failed to fetch event:', response.status, response.statusText);
       }
@@ -150,15 +150,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  createForm.addEventListener('submit', (event) => {
-    event.preventDefault();
+  createForm.addEventListener('submit', (e) => {
+    e.preventDefault();
     const eventData = {
-      time: createForm.time.value,
-      activity: createForm.activity.value,
-      location: createForm.location.value,
-      notes: createForm.notes.value,
+      time: createForm.elements['time'].value,
+      activity: createForm.elements['activity'].value,
+      location: createForm.elements['location'].value,
+      notes: createForm.elements['notes'].value,
     };
     createEvent(eventData);
+  });
+
+  updateForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const eventId = updateForm.elements['id'].value;
+    const eventData = {
+      time: updateForm.elements['time'].value,
+      activity: updateForm.elements['activity'].value,
+      location: updateForm.elements['location'].value,
+      notes: updateForm.elements['notes'].value,
+    };
+    updateEvent(eventId, eventData);
   });
 
   fetchEvents();
