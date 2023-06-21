@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           `;
         }).join('');
-
+  
         contentContainer.innerHTML = eventsHTML;
       } else {
         console.error('Failed to fetch events.');
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Error:', error);
     }
-  };
+  };  
 
   fetchEvents();
 });
