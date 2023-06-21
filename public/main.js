@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let editEventId = null;
 
-  // Helper function to create an event item
+  // function to create an event item
   function createEventItem(event) {
     const item = document.createElement('div');
     item.classList.add('event-item');
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return item;
   }
 
-  // Helper function to clear the forms
+  // function to clear the forms
   function clearForms() {
     addEventForm.reset();
     editEventForm.reset();
