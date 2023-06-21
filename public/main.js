@@ -42,13 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Update Event
-  updateForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const idInput = document.getElementById('update-id');
-
+  const populateUpdateForm = async (id) => {
     try {
-      const response = await fetch(`/events/${idInput.value}`);
+      const response = await fetch(`/events/${id}`);
 
       if (response.status === 200) {
         const eventToUpdate = await response.json();
@@ -74,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
           };
 
           try {
-            const response = await fetch(`/events/${idInput.value}`, {
+            const response = await fetch(`/events/${id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(eventData),
@@ -83,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.status === 200) {
               const updatedEvent = await response.json();
               updateEventInList(updatedEvent);
-              idInput.value = '';
               timeInput.value = '';
               activityInput.value = '';
               locationInput.value = '';
@@ -101,46 +96,56 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('Error retrieving event:', err);
     }
-  });
+  };
 
   // Delete Event
   const deleteEvent = async (id) => {
-    try {
-      const response = await fetch(`/events/${id}`, { method: 'DELETE' });
+    if (confirm('Are you sure you want to delete this event?')) {
+      try {
+        const response = await fetch(`/events/${id}`, { method: 'DELETE' });
 
-      if (response.status === 200) {
-        const deletedEvent = await response.json();
-        removeEventFromList(deletedEvent.id);
-      } else {
-        console.error('Error deleting event:', response.status, response.statusText);
+        if (response.status === 200) {
+          const deletedEvent = await response.json();
+          removeEventFromList(deletedEvent.id);
+        } else {
+          console.error('Error deleting event:', response.status, response.statusText);
+        }
+      } catch (err) {
+        console.error('Error deleting event:', err);
       }
-    } catch (err) {
-      console.error('Error deleting event:', err);
     }
   };
 
   // Display Event in List
   const displayEvent = (event) => {
     const li = document.createElement('li');
-    li.dataset.time = event.time;
+    li.dataset.id = event.id;
     li.innerHTML = `
       <strong>ID:</strong> ${event.id}<br>
       <strong>Time:</strong> ${event.time}<br>
       <strong>Activity:</strong> ${event.activity}<br>
       <strong>Location:</strong> ${event.location}<br>
       <strong>Notes:</strong> ${event.notes}<br>
-      <button class="delete-button" data-id="${event.id}">Delete</button>
+      <button class="delete-button">Delete</button>
+      <button class="update-button">Update</button>
     `;
-    eventList.appendChild(li);
 
     const sortedListItems = Array.from(eventList.getElementsByTagName('li')).sort((a, b) => {
-      return a.dataset.time.localeCompare(b.dataset.time);
+      return a.dataset.id - b.dataset.id;
     });
-    eventList.innerHTML = '';
-    sortedListItems.forEach((item) => eventList.appendChild(item));
+
+    const insertIndex = sortedListItems.findIndex((item) => item.dataset.id > event.id);
+    if (insertIndex !== -1) {
+      eventList.insertBefore(li, sortedListItems[insertIndex]);
+    } else {
+      eventList.appendChild(li);
+    }
 
     const deleteButton = li.querySelector('.delete-button');
     deleteButton.addEventListener('click', () => deleteEvent(event.id));
+
+    const updateButton = li.querySelector('.update-button');
+    updateButton.addEventListener('click', () => populateUpdateForm(event.id));
   };
 
   // Update Event in List
@@ -152,17 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
       <strong>Activity:</strong> ${event.activity}<br>
       <strong>Location:</strong> ${event.location}<br>
       <strong>Notes:</strong> ${event.notes}<br>
-      <button class="delete-button" data-id="${event.id}">Delete</button>
+      <button class="delete-button">Delete</button>
+      <button class="update-button">Update</button>
     `;
-
-    const sortedListItems = Array.from(eventList.getElementsByTagName('li')).sort((a, b) => {
-      return a.dataset.time.localeCompare(b.dataset.time);
-    });
-    eventList.innerHTML = '';
-    sortedListItems.forEach((item) => eventList.appendChild(item));
 
     const deleteButton = listItem.querySelector('.delete-button');
     deleteButton.addEventListener('click', () => deleteEvent(event.id));
+
+    const updateButton = listItem.querySelector('.update-button');
+    updateButton.addEventListener('click', () => populateUpdateForm(event.id));
   };
 
   // Remove Event from List
