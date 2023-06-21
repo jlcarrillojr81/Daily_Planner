@@ -46,9 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (response.ok) {
+        const deletedEvent = await response.json();
         const eventItem = document.querySelector(`li[data-id="${eventId}"]`);
-        eventItem.remove();
-        console.log('Event deleted successfully');
+        if (eventItem) {
+          eventItem.remove();
+        }
       } else {
         console.error('Failed to delete event:', response.status, response.statusText);
       }
@@ -70,27 +72,30 @@ document.addEventListener('DOMContentLoaded', () => {
       if (response.ok) {
         const updatedEvent = await response.json();
         const eventItem = document.querySelector(`li[data-id="${eventId}"]`);
-        eventItem.innerHTML = `
-          <strong>Time:</strong> ${updatedEvent.time}<br>
-          <strong>ID:</strong> ${updatedEvent.id}<br>
-          <strong>Activity:</strong> ${updatedEvent.activity}<br>
-          <strong>Location:</strong> ${updatedEvent.location}<br>
-          <strong>Notes:</strong> ${updatedEvent.notes}<br>
-          <button class="delete-button">Delete</button>
-          <button class="update-button">Update</button>
-        `;
+        if (eventItem) {
+          eventItem.innerHTML = `
+            <strong>Time:</strong> ${updatedEvent.time}<br>
+            <strong>ID:</strong> ${updatedEvent.id}<br>
+            <strong>Activity:</strong> ${updatedEvent.activity}<br>
+            <strong>Location:</strong> ${updatedEvent.location}<br>
+            <strong>Notes:</strong> ${updatedEvent.notes}<br>
+            <button class="delete-button">Delete</button>
+            <button class="update-button">Update</button>
+          `;
 
-        const deleteButton = eventItem.querySelector('.delete-button');
-        deleteButton.addEventListener('click', () => {
-          deleteEvent(updatedEvent.id);
-        });
+          const deleteButton = eventItem.querySelector('.delete-button');
+          deleteButton.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete this event?')) {
+              deleteEvent(updatedEvent.id);
+            }
+          });
 
-        const updateButton = eventItem.querySelector('.update-button');
-        updateButton.addEventListener('click', () => {
-          populateUpdateForm(updatedEvent.id);
-        });
-
-        console.log('Event updated successfully');
+          const updateButton = eventItem.querySelector('.update-button');
+          updateButton.addEventListener('click', () => {
+            populateUpdateForm(updatedEvent.id);
+          });
+        }
+        updateForm.reset();
       } else {
         console.error('Failed to update event:', response.status, response.statusText);
       }
@@ -114,7 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const deleteButton = li.querySelector('.delete-button');
     deleteButton.addEventListener('click', () => {
-      deleteEvent(event.id);
+      if (confirm('Are you sure you want to delete this event?')) {
+        deleteEvent(event.id);
+      }
     });
 
     const updateButton = li.querySelector('.update-button');
@@ -152,18 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
       notes: createForm.notes.value,
     };
     createEvent(eventData);
-  });
-
-  updateForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const eventId = updateForm.eventId.value;
-    const eventData = {
-      time: updateForm.time.value,
-      activity: updateForm.activity.value,
-      location: updateForm.location.value,
-      notes: updateForm.notes.value,
-    };
-    updateEvent(eventId, eventData);
   });
 
   fetchEvents();
