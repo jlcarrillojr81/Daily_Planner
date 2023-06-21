@@ -10,44 +10,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const editForm = document.getElementById('editForm');
   const contentContainer = document.getElementById('content');
 
-  addButton.addEventListener('click', () => {
-    addFormContainer.classList.toggle('form-displayed');
-  });
+  // Initialize activeForm variable
+  let activeForm = '';
 
-  editButton.addEventListener('click', () => {
-    const checkedEvents = document.querySelectorAll('.event input[type="checkbox"]:checked');
-    if (checkedEvents.length === 0) {
-      alert('Please check an Event');
-      return;
-    }
-    if (checkedEvents.length > 1) {
-      alert('Only select one Event');
-      return;
-    }
-
-    const eventId = checkedEvents[0].dataset.id;
-    fetch(`/events/${eventId}`)
-      .then(response => response.json())
-      .then(eventData => {
-        // Populate the edit form with the selected event data
-        editForm.elements['edit-time'].value = eventData.time;
-        editForm.elements['edit-activity'].value = eventData.activity;
-        editForm.elements['edit-location'].value = eventData.location;
-        editForm.elements['edit-notes'].value = eventData.notes;
-
-        editFormContainer.classList.add('form-displayed');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  });
-
+  // Event listener for exit button
   exitButton.addEventListener('click', () => {
     addFormContainer.classList.remove('form-displayed');
+    editFormContainer.classList.remove('form-displayed');
+    activeForm = '';
   });
 
-  editExitButton.addEventListener('click', () => {
-    editFormContainer.classList.remove('form-displayed');
+  // Event listener for add button
+  addButton.addEventListener('click', () => {
+    if (activeForm === 'add') {
+      addFormContainer.classList.remove('form-displayed');
+      activeForm = '';
+    } else {
+      addFormContainer.classList.add('form-displayed');
+      editFormContainer.classList.remove('form-displayed');
+      activeForm = 'add';
+    }
+  });
+
+  // Event listener for edit button
+  editButton.addEventListener('click', () => {
+    if (activeForm === 'edit') {
+      editFormContainer.classList.remove('form-displayed');
+      activeForm = '';
+    } else {
+      editFormContainer.classList.add('form-displayed');
+      addFormContainer.classList.remove('form-displayed');
+      activeForm = 'edit';
+    }
   });
 
   addForm.addEventListener('submit', async (event) => {
