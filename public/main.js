@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const eventList = document.getElementById('event-list');
+  const createForm = document.getElementById('create-form');
+  const updateForm = document.getElementById('update-form');
 
-  // Function to fetch events from the server
+  // Fetch Events
   const fetchEvents = async () => {
     try {
       const response = await fetch('/events');
@@ -11,10 +13,143 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         console.error('Failed to fetch events:', response.status, response.statusText);
       }
-    } catch (err) {
-      console.error('Failed to fetch events:', err);
+    } catch (error) {
+      console.error('Failed to fetch events:', error);
     }
   };
+
+  // Create Event
+  createForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const time = createForm.elements['create-time'].value;
+    const activity = createForm.elements['create-activity'].value;
+    const location = createForm.elements['create-location'].value;
+    const notes = createForm.elements['create-notes'].value;
+
+    try {
+      const response = await fetch('/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          time,
+          activity,
+          location,
+          notes,
+          completed: false,
+          completionTime: null,
+        }),
+      });
+
+      if (response.ok) {
+        const event = await response.json();
+        displayEvent(event);
+        createForm.reset();
+      } else {
+        console.error('Failed to create event:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Failed to create event:', error);
+    }
+  });
+
+  // Delete Event
+  const deleteEvent = async (eventId) => {
+    try {
+      const response = await fetch(`/events/${eventId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        const eventItem = document.querySelector(`li[data-id="${eventId}"]`);
+        eventItem.remove();
+      } else {
+        console.error('Failed to delete event:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Failed to delete event:', error);
+    }
+  };
+
+  // Populate Update Form
+  const populateUpdateForm = async (eventId) => {
+    try {
+      const response = await fetch(`/events/${eventId}`);
+      if (response.ok) {
+        const event = await response.json();
+        updateForm.elements['update-id'].value = event.id;
+        updateForm.elements['update-time'].value = event.time;
+        updateForm.elements['update-activity'].value = event.activity;
+        updateForm.elements['update-location'].value = event.location;
+        updateForm.elements['update-notes'].value = event.notes;
+      } else {
+        console.error('Failed to fetch event for update:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Failed to fetch event for update:', error);
+    }
+  };
+
+  // Update Event
+  updateForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const eventId = updateForm.elements['update-id'].value;
+    const time = updateForm.elements['update-time'].value;
+    const activity = updateForm.elements['update-activity'].value;
+    const location = updateForm.elements['update-location'].value;
+    const notes = updateForm.elements['update-notes'].value;
+
+    try {
+      const response = await fetch(`/events/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          time,
+          activity,
+          location,
+          notes,
+        }),
+      });
+
+      if (response.ok) {
+        const updatedEvent = await response.json();
+        const eventItem = document.querySelector(`li[data-id="${eventId}"]`);
+        eventItem.innerHTML = `
+          <strong data-type="time">Time:</strong> ${updatedEvent.time}<br>
+          <strong>Activity:</strong> ${updatedEvent.activity}<br>
+          <strong>Location:</strong> ${updatedEvent.location}<br>
+          <strong>Notes:</strong> ${updatedEvent.notes}<br>
+          <div>
+            <label for="completed-${updatedEvent.id}">Completed:</label>
+            <input type="checkbox" id="completed-${updatedEvent.id}" class="completed-checkbox" data-id="${updatedEvent.id}">
+          </div>
+          <div class="completion-time" data-id="${updatedEvent.id}"></div>
+          <button class="delete-button">Delete</button>
+          <button class="update-button">Update</button>
+        `;
+        const deleteButton = eventItem.querySelector('.delete-button');
+        deleteButton.addEventListener('click', () => deleteEvent(updatedEvent.id));
+        const updateButton = eventItem.querySelector('.update-button');
+        updateButton.addEventListener('click', () => populateUpdateForm(updatedEvent.id));
+        const completedCheckbox = eventItem.querySelector(`#completed-${updatedEvent.id}`);
+        completedCheckbox.addEventListener('change', () => handleCompletedCheckbox(updatedEvent.id));
+        const completionTime = eventItem.querySelector(`.completion-time[data-id="${updatedEvent.id}"]`);
+        if (updatedEvent.completed) {
+          completedCheckbox.checked = true;
+          completionTime.textContent = `Completed at: ${updatedEvent.completionTime}`;
+        } else {
+          completionTime.textContent = '';
+        }
+      } else {
+        console.error('Failed to update event:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Failed to update event:', error);
+    }
+  });
 
   // Display Event in List
   const displayEvent = (event) => {
@@ -84,13 +219,13 @@ document.addEventListener('DOMContentLoaded', () => {
           }),
         });
 
-        if (response.status === 200) {
+        if (response.ok) {
           console.log('Event marked as completed successfully');
         } else {
-          console.error('Error marking event as completed:', response.status, response.statusText);
+          console.error('Failed to mark event as completed:', response.status, response.statusText);
         }
-      } catch (err) {
-        console.error('Error marking event as completed:', err);
+      } catch (error) {
+        console.error('Failed to mark event as completed:', error);
       }
     } else {
       completionTime.textContent = '';
@@ -107,17 +242,17 @@ document.addEventListener('DOMContentLoaded', () => {
           }),
         });
 
-        if (response.status === 200) {
+        if (response.ok) {
           console.log('Event marked as incomplete successfully');
         } else {
-          console.error('Error marking event as incomplete:', response.status, response.statusText);
+          console.error('Failed to mark event as incomplete:', response.status, response.statusText);
         }
-      } catch (err) {
-        console.error('Error marking event as incomplete:', err);
+      } catch (error) {
+        console.error('Failed to mark event as incomplete:', error);
       }
     }
   };
 
-  // Call fetchEvents to populate the event list
+  // Initialize
   fetchEvents();
 });
