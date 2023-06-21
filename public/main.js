@@ -6,11 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const contentContainer = document.getElementById('content');
 
   addButton.addEventListener('click', () => {
-    addFormContainer.classList.toggle('form-displayed');
+    addFormContainer.style.display = 'flex';
   });
 
   exitButton.addEventListener('click', () => {
-    addFormContainer.classList.add('hidden');
+    addFormContainer.style.display = 'none';
   });
 
   addForm.addEventListener('submit', async (event) => {
