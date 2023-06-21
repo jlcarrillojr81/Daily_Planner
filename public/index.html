@@ -19,11 +19,30 @@
   </div>
 
   <div class="container" id="content">
-    <!-- Add content here -->
+    <!-- Events will be dynamically added here -->
   </div>
 
   <div class="container" id="motivation">
     <!-- Add motivation content here -->
+  </div>
+
+  <!-- Add the form element -->
+  <div id="addFormContainer" class="container hidden">
+    <form id="addForm">
+      <label for="time">Time:</label>
+      <input type="text" id="time" placeholder="24 Hr">
+
+      <label for="activity">Activity:</label>
+      <input type="text" id="activity" placeholder="Activity">
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" placeholder="Location">
+
+      <label for="notes">Notes:</label>
+      <input type="text" id="notes" placeholder="Enter Notes">
+
+      <button type="submit">Submit</button>
+    </form>
   </div>
 </body>
 </html>
