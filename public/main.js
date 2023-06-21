@@ -1,6 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
   const eventList = document.getElementById('event-list');
 
+  // Function to fetch events from the server
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('/events');
+      if (response.ok) {
+        const events = await response.json();
+        events.forEach((event) => displayEvent(event));
+      } else {
+        console.error('Failed to fetch events:', response.status, response.statusText);
+      }
+    } catch (err) {
+      console.error('Failed to fetch events:', err);
+    }
+  };
+
   // Display Event in List
   const displayEvent = (event) => {
     const li = document.createElement('li');
@@ -53,54 +68,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkbox = document.querySelector(`.completed-checkbox[data-id="${eventId}"]`);
     const completionTime = document.querySelector(`.completion-time[data-id="${eventId}"]`);
 
+    if (checkbox.checked) {
+      const currentTime = new Date().toLocaleTimeString();
+      completionTime.textContent = `Completed at: ${currentTime}`;
 
-  if (checkbox.checked) {
-    const currentTime = new Date().toLocaleTimeString();
-    completionTime.textContent = `Completed at: ${currentTime}`;
+      try {
+        const response = await fetch(`/events/${eventId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            completed: true,
+            completionTime: currentTime,
+          }),
+        });
 
-    try {
-      const response = await fetch(`/events/${eventId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          completed: true,
-          completionTime: currentTime,
-        }),
-      });
-
-      if (response.status === 200) {
-        console.log('Event marked as completed successfully');
-      } else {
-        console.error('Error marking event as completed:', response.status, response.statusText);
+        if (response.status === 200) {
+          console.log('Event marked as completed successfully');
+        } else {
+          console.error('Error marking event as completed:', response.status, response.statusText);
+        }
+      } catch (err) {
+        console.error('Error marking event as completed:', err);
       }
-    } catch (err) {
-      console.error('Error marking event as completed:', err);
-    }
-  } else {
-    completionTime.textContent = '';
+    } else {
+      completionTime.textContent = '';
 
-    try {
-      const response = await fetch(`/events/${eventId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          completed: false,
-          completionTime: null,
-        }),
-      });
+      try {
+        const response = await fetch(`/events/${eventId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            completed: false,
+            completionTime: null,
+          }),
+        });
 
-      if (response.status === 200) {
-        console.log('Event marked as incomplete successfully');
-      } else {
-        console.error('Error marking event as incomplete:', response.status, response.statusText);
+        if (response.status === 200) {
+          console.log('Event marked as incomplete successfully');
+        } else {
+          console.error('Error marking event as incomplete:', response.status, response.statusText);
+        }
+      } catch (err) {
+        console.error('Error marking event as incomplete:', err);
       }
-    } catch (err) {
-      console.error('Error marking event as incomplete:', err);
     }
-  }
-};
+  };
+
+  // Call fetchEvents to populate the event list
+  fetchEvents();
 });
