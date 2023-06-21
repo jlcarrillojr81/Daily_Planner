@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const addFormContainer = document.getElementById('addFormContainer');
   const editFormContainer = document.getElementById('editFormContainer');
   const exitButton = document.getElementById('exitButton');
+  const editExitButton = document.getElementById('edit-exitButton');
   const addForm = document.getElementById('addForm');
   const editForm = document.getElementById('editForm');
   const contentContainer = document.getElementById('content');
@@ -29,10 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(eventData => {
         // Populate the edit form with the selected event data
-        editForm.elements.time.value = eventData.time;
-        editForm.elements.activity.value = eventData.activity;
-        editForm.elements.location.value = eventData.location;
-        editForm.elements.notes.value = eventData.notes;
+        editForm.elements['edit-time'].value = eventData.time;
+        editForm.elements['edit-activity'].value = eventData.activity;
+        editForm.elements['edit-location'].value = eventData.location;
+        editForm.elements['edit-notes'].value = eventData.notes;
 
         editFormContainer.classList.add('form-displayed');
       })
@@ -43,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   exitButton.addEventListener('click', () => {
     addFormContainer.classList.remove('form-displayed');
+  });
+
+  editExitButton.addEventListener('click', () => {
     editFormContainer.classList.remove('form-displayed');
   });
 
@@ -67,10 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const eventId = checkedEvents[0].dataset.id;
 
     // Get the form input values
-    const timeInput = editForm.elements.time;
-    const activityInput = editForm.elements.activity;
-    const locationInput = editForm.elements.location;
-    const notesInput = editForm.elements.notes;
+    const timeInput = editForm.elements['edit-time'];
+    const activityInput = editForm.elements['edit-activity'];
+    const locationInput = editForm.elements['edit-location'];
+    const notesInput = editForm.elements['edit-notes'];
 
     const time = timeInput.value;
     const activity = activityInput.value;
@@ -105,7 +109,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const fetchEvents = async () => {
-    // Fetch and display events in the content container
+    try {
+      const response = await fetch('/events');
+      if (response.ok) {
+        const events = await response.json();
+        // Generate HTML for events and append it to the content container
+        const eventsHTML = events.map((event) => {
+          return `
+            <div class="event">
+              <input type="checkbox" data-id="${event.id}">
+              <p>${event.time} ${event.activity} at ${event.location}: ${event.notes}</p>
+            </div>
+          `;
+        }).join('');
+
+        contentContainer.innerHTML = eventsHTML;
+      } else {
+        console.error('Failed to fetch events.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   fetchEvents();
