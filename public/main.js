@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const editFormContainer = document.getElementById('editFormContainer');
   const exitButton = document.getElementById('exitButton');
   const editExitButton = document.getElementById('edit-exitButton');
-  const addForm = document.getElementById('addForm');
-  const editForm = document.getElementById('editForm');
+  const addForm = document.getElementById('add-Form');
+  const editForm = document.getElementById('edit-Form');
   const contentContainer = document.getElementById('content');
 
   // Initialize activeForm variable
