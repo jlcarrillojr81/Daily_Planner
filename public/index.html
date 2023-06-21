@@ -1,47 +1,53 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <meta charset="UTF-8">
   <title>Daily Planner</title>
-  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" type="text/css" href="main.css">
 </head>
-
 <body>
   <h1>Daily Planner</h1>
-  
-  <h2>Create Event</h2>
-  <form id="create-event-form">
+
+  <div id="events-list">
+    <!-- Events will be dynamically added here -->
+  </div>
+
+  <h2>Add New Event</h2>
+  <form id="add-event-form">
     <label for="time">Time:</label>
-    <input type="text" id="time" required>
+    <input type="text" id="time" name="time" required><br>
+
     <label for="activity">Activity:</label>
-    <input type="text" id="activity" required>
+    <input type="text" id="activity" name="activity" required><br>
+
     <label for="location">Location:</label>
-    <input type="text" id="location" required>
+    <input type="text" id="location" name="location" required><br>
+
     <label for="notes">Notes:</label>
-    <textarea id="notes"></textarea>
-    <button type="submit">Create</button>
+    <textarea id="notes" name="notes"></textarea><br>
+
+    <input type="submit" value="Add Event">
   </form>
 
-  <h2>Update Event</h2>
-  <form id="update-event-form">
-    <label for="update-id">Event ID:</label>
-    <input type="text" id="update-id" required>
-    <label for="update-time">Time:</label>
-    <input type="text" id="update-time" required>
-    <label for="update-activity">Activity:</label>
-    <input type="text" id="update-activity" required>
-    <label for="update-location">Location:</label>
-    <input type="text" id="update-location" required>
-    <label for="update-notes">Notes:</label>
-    <textarea id="update-notes"></textarea>
-    <button type="submit">Update</button>
-  </form>
+  <h2>Edit Event</h2>
+  <form id="edit-event-form">
+    <input type="hidden" id="edit-event-id" name="id">
 
-  <h2>Events</h2>
-  <ul id="event-list"></ul>
+    <label for="edit-time">Time:</label>
+    <input type="text" id="edit-time" name="time" required><br>
+
+    <label for="edit-activity">Activity:</label>
+    <input type="text" id="edit-activity" name="activity" required><br>
+
+    <label for="edit-location">Location:</label>
+    <input type="text" id="edit-location" name="location" required><br>
+
+    <label for="edit-notes">Notes:</label>
+    <textarea id="edit-notes" name="notes"></textarea><br>
+
+    <input type="submit" value="Update Event">
+    <button id="cancel-edit">Cancel</button>
+  </form>
 
   <script src="main.js"></script>
 </body>
-
 </html>

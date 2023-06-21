@@ -8,35 +8,35 @@ h1 {
 }
 
 h2 {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 form {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
   margin-top: 10px;
 }
 
-input[type="text"],
+input[type='text'],
 textarea {
   width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
 }
 
 button {
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 10px;
+.event-item {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
   padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
+}
+
+.event-item p {
+  margin: 0;
+}
+
+#edit-event-form,
+#cancel-edit {
+  display: none;
 }
