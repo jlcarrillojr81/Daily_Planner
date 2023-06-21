@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const eventList = document.getElementById('event-list');
+  fetchEvents();
 
-  const fetchEvents = async () => {
+  async function fetchEvents() {
     try {
       const response = await fetch('/events');
       if (response.ok) {
@@ -13,9 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Failed to fetch events:', error);
     }
-  };
+  }
 
-  const createEvent = async (eventData) => {
+  async function createEvent(eventData) {
     try {
       const response = await fetch('/events', {
         method: 'POST',
@@ -34,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Failed to create event:', error);
     }
-  };
+  }
 
-  const deleteEvent = async (eventId) => {
+  async function deleteEvent(eventId) {
     try {
       const response = await fetch(`/events/${eventId}`, {
         method: 'DELETE',
@@ -52,9 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Failed to delete event:', error);
     }
-  };
+  }
 
-  const updateEvent = async (eventId, eventData) => {
+  async function updateEvent(eventId, eventData) {
     try {
       const response = await fetch(`/events/${eventId}`, {
         method: 'PUT',
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const eventItem = document.querySelector(`li[data-id="${eventId}"]`);
         eventItem.innerHTML = `
           <strong data-type="time">Time:</strong> ${updatedEvent.time}<br>
+          <strong>ID:</strong> ${updatedEvent.id}<br>
           <strong>Activity:</strong> ${updatedEvent.activity}<br>
           <strong>Location:</strong> ${updatedEvent.location}<br>
           <strong>Notes:</strong> ${updatedEvent.notes}<br>
@@ -100,13 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Failed to update event:', error);
     }
-  };
+  }
 
-  const displayEvent = (event) => {
+  function displayEvent(event) {
     const li = document.createElement('li');
     li.dataset.id = event.id;
     li.innerHTML = `
       <strong data-type="time">Time:</strong> ${event.time}<br>
+      <strong>ID:</strong> ${event.id}<br>
       <strong>Activity:</strong> ${event.activity}<br>
       <strong>Location:</strong> ${event.location}<br>
       <strong>Notes:</strong> ${event.notes}<br>
@@ -146,9 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
       completedCheckbox.checked = true;
       completionTime.textContent = `Completed at: ${event.completionTime}`;
     }
-  };
+  }
 
-  const handleCreateFormSubmit = (event) => {
+  function handleCreateFormSubmit(event) {
     event.preventDefault();
     const form = event.target;
     const time = form.elements['time'].value;
@@ -165,9 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     createEvent(eventData);
     form.reset();
-  };
+  }
 
-  const handleUpdateFormSubmit = (event) => {
+  function handleUpdateFormSubmit(event) {
     event.preventDefault();
     const form = event.target;
     const eventId = form.elements['update-event-id'].value;
@@ -183,9 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     updateEvent(eventId, eventData);
     form.reset();
-  };
+  }
 
-  const populateUpdateForm = (eventId) => {
+  function populateUpdateForm(eventId) {
     const form = document.getElementById('update-event-form');
     const eventItem = document.querySelector(`li[data-id="${eventId}"]`);
     const time = eventItem.querySelector('strong[data-type="time"]').nextSibling.textContent.trim();
@@ -197,9 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
     form.elements['update-activity'].value = activity;
     form.elements['update-location'].value = location;
     form.elements['update-notes'].value = notes;
-  };
+  }
 
-  const handleCompletedCheckbox = async (eventId) => {
+  async function handleCompletedCheckbox(eventId) {
     const checkbox = document.querySelector(`.completed-checkbox[data-id="${eventId}"]`);
     const completionTime = document.querySelector(`.completion-time[data-id="${eventId}"]`);
 
@@ -251,13 +254,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Failed to mark event as incomplete:', error);
       }
     }
-  };
+  }
 
   const createForm = document.getElementById('create-event-form');
   createForm.addEventListener('submit', handleCreateFormSubmit);
 
   const updateForm = document.getElementById('update-event-form');
   updateForm.addEventListener('submit', handleUpdateFormSubmit);
-
-  fetchEvents();
 });
