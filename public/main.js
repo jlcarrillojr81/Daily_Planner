@@ -12,10 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
         checkbox.type = 'checkbox';
 
         eventElement.textContent = `${event.time} ${event.activity} at ${event.location}: ${event.notes}`;
-        eventElement.appendChild(checkbox);
+        eventElement.insertBefore(checkbox, eventElement.firstChild); // Insert checkbox as the first child of eventElement
         contentContainer.appendChild(eventElement);
       });
     })
     .catch(error => console.error('Error fetching events:', error));
 });
-
